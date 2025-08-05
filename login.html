@@ -2,87 +2,61 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: sans-serif;
       padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      background: #f4f4f4;
     }
-
-    img {
-      width: 200px;
-      height: 200px;
-      object-fit: contain;
-      margin-bottom: 1rem;
-    }
-
-    input, button {
-      width: 100%;
-      max-width: 300px;
-      padding: 0.75rem;
-      margin-bottom: 1rem;
-      font-size: 1rem;
-    }
-
-    #status {
-      color: red;
-      font-weight: bold;
+    h2 {
       text-align: center;
+    }
+    input, button {
+      display: block;
+      width: 100%;
+      padding: 1rem;
+      margin: 1rem 0;
+      font-size: 1rem;
     }
   </style>
 </head>
 <body>
-
-  <img src="logo.png" alt="Logo"> <!-- Ganti dengan file logo kamu -->
   <h2>Login</h2>
-
-  <input type="text" id="username" placeholder="Username" />
-  <input type="password" id="password" placeholder="Password" />
+  <input type="text" id="username" placeholder="Username">
+  <input type="password" id="password" placeholder="Password">
   <button onclick="login()">Login</button>
   <p id="status"></p>
 
   <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbxDVG6LiYtIT6ieLuqyCej4cgK7Dx4cAhiVSTA9newoh-AjLE9TXJsPpG6NAV-VpJvi/exec";
+    const apiUrl = "https://script.google.com/macros/s/AKfycbxDVG6LiYtIT6ieLuqyCej4cgK7Dx4cAhiVSTA9newoh-AjLE9TXJsPpG6NAV-VpJvi/exec";
 
     function login() {
       const username = document.getElementById("username").value.trim();
       const password = document.getElementById("password").value.trim();
-      const status = document.getElementById("status");
 
-      status.textContent = "Memproses...";
+      document.getElementById("status").textContent = "Memproses...";
 
-      fetch(`${scriptURL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
-        .then(res => res.json())
+      fetch(`${apiUrl}?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
+        .then(response => response.json())
         .then(data => {
           if (data.success) {
-            localStorage.setItem("username", data.username);
-
-            if (window.AppInventor) {
-			  window.AppInventor.setWebViewString(JSON.stringify({ success: true, username }));
-			} else {
-			  window.location.href = "menu.html"; // fallback jika bukan dari AppInventor
-			}
-
+            // Kirim ke App Inventor sebagai JSON string
+            const result = JSON.stringify({status: "success", username: data.username});
+            window.AppInventor.setWebViewString(result);
           } else {
-            if (window.AppInventor) {
-              window.AppInventor.setWebViewString(JSON.stringify({
-                status: "error",
-                message: data.message || "Login gagal"
-              }));
-            } else {
-              status.textContent = data.message || "Login gagal";
-            }
+            document.getElementById("status").textContent = "Login gagal. Coba lagi.";
+            const result = JSON.stringify({status: "failed", message: "Login gagal"});
+            window.AppInventor.setWebViewString(result);
           }
         })
         .catch(err => {
-          if (window.AppInventor) {
-            window.AppInventor.setWebViewString(JSON.stringify({
-              status: "error",
-              message: "Gagal menghubungi server"
-            }));
-          } else {
-            status.textContent = "Gagal menghubungi server";
+          document.getElementById("status").textContent = "Gagal terhubung ke server.";
+          const result = JSON.stringify({status: "error", message: err.toString()});
+          window.AppInventor.setWebViewString(result);
+        });
+    }
+  </script>
+</body>
+</html>
