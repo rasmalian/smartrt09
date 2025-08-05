@@ -2,84 +2,100 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Menu</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
   <style>
     body {
       font-family: sans-serif;
-      padding: 2rem 1rem;
       margin: 0;
-      max-width: 480px;
-      margin: auto;
-      background-color: #f9f9f9;
-    }
-
-    h2 {
-      text-align: center;
+      padding: 1rem;
+      background: #f9f9f9;
       color: #333;
     }
 
-    #userDisplay {
-      font-weight: bold;
+    .header-img {
+      width: 100%;
+      max-width: 600px;
+      height: auto;
+      display: block;
+      margin: 0 auto 1rem auto;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    h2, p {
+      text-align: center;
     }
 
     .button {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
-      margin: 1rem 0;
-      padding: 0.8rem 1rem;
-      font-size: 1rem;
-      background-color: #2196f3;
+      background-color: #4CAF50;
       color: white;
       border: none;
       border-radius: 8px;
-      width: 100%;
+      padding: 1rem;
+      margin: 1rem auto;
       max-width: 300px;
+      width: 90%;
+      font-size: 1rem;
       cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       transition: background-color 0.3s;
     }
 
     .button:hover {
-      background-color: #1976d2;
+      background-color: #45a049;
     }
 
-    .center {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    .material-icons {
+      margin-right: 0.5rem;
     }
 
-    #output {
-      background-color: #fff;
-      border: 1px solid #ccc;
+    #blogPost {
+      background: white;
       padding: 1rem;
-      width: 100%;
-      max-width: 300px;
-      margin-top: 1rem;
-      border-radius: 6px;
+      margin: 1rem auto;
+      max-width: 600px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    pre {
       white-space: pre-wrap;
+      background: #eee;
+      padding: 1rem;
+      border-radius: 8px;
+      max-width: 600px;
+      margin: 1rem auto;
+      overflow-x: auto;
     }
   </style>
 </head>
 <body>
+
+  <!-- Gambar Header -->
+  <img src="https://via.placeholder.com/600x200?text=Header+Elegan" alt="Header" class="header-img" />
+
   <h2>Menu</h2>
-  <div class="center">
-    <p>Selamat datang, <span id="userDisplay"></span></p>
-    
-    <button class="button" onclick="kirimData()">
-      <i class="fas fa-paper-plane"></i> Kirim ke Sheet
-    </button>
+  <p>Selamat datang, <span id="userDisplay"></span></p>
 
-    <button class="button" onclick="ambilData()">
-      <i class="fas fa-download"></i> Ambil & Hapus Data
-    </button>
+  <!-- Postingan Blogspot -->
+  <div id="blogPost">Memuat postingan terbaru...</div>
 
-    <pre id="output"></pre>
-  </div>
+  <!-- Tombol Aksi -->
+  <button class="button" onclick="kirimData()">
+    <span class="material-icons">send</span> Kirim ke Sheet
+  </button>
+
+  <button class="button" onclick="ambilData()">
+    <span class="material-icons">download</span> Ambil & Hapus Data
+  </button>
+
+  <!-- Output -->
+  <pre id="output"></pre>
 
   <script>
     const scriptURL = "https://script.google.com/macros/s/AKfycbxDVG6LiYtIT6ieLuqyCej4cgK7Dx4cAhiVSTA9newoh-AjLE9TXJsPpG6NAV-VpJvi/exec";
@@ -92,9 +108,6 @@
         .then(res => res.json())
         .then(data => {
           document.getElementById("output").textContent = data.success ? "Terkirim!" : "Gagal kirim.";
-        })
-        .catch(() => {
-          document.getElementById("output").textContent = "Gagal menghubungi server.";
         });
     }
 
@@ -107,11 +120,29 @@
           } else {
             document.getElementById("output").textContent = data.message;
           }
-        })
-        .catch(() => {
-          document.getElementById("output").textContent = "Gagal menghubungi server.";
         });
     }
+
+    // Ambil postingan terbaru dari blogspot kamu
+    const rssFeed = "https://projectmu.blogspot.com/feeds/posts/default?alt=json";
+
+    fetch(rssFeed)
+      .then(res => res.json())
+      .then(data => {
+        const post = data.feed.entry[0];
+        const title = post.title.$t;
+        const content = post.content.$t;
+        const link = post.link.find(l => l.rel === "alternate").href;
+
+        document.getElementById("blogPost").innerHTML = `
+          <h3>${title}</h3>
+          <p>${content.substring(0, 150)}...</p>
+          <a href="${link}" target="_blank">Baca selengkapnya</a>
+        `;
+      })
+      .catch(() => {
+        document.getElementById("blogPost").textContent = "Gagal memuat postingan.";
+      });
   </script>
 </body>
 </html>
