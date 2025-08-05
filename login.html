@@ -80,32 +80,35 @@
     const scriptURL = "https://script.google.com/macros/s/AKfycbxDVG6LiYtIT6ieLuqyCej4cgK7Dx4cAhiVSTA9newoh-AjLE9TXJsPpG6NAV-VpJvi/exec";
 
     function login() {
-	  const username = document.getElementById("username").value;
-	  const password = document.getElementById("password").value;
-	  const xhr = new XMLHttpRequest();
-	  const url = `${scriptURL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
+		  const username = document.getElementById("username").value;
+		  const password = document.getElementById("password").value;
+		  const xhr = new XMLHttpRequest();
+		  const url = `${scriptURL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
 
-	  xhr.open("GET", url, true);
-	  xhr.onreadystatechange = function () {
-		if (xhr.readyState === 4) {
-		  try {
-			const data = JSON.parse(xhr.responseText);
-			if (data.success) {
-			  localStorage.setItem("username", data.username);
-			  window.location.href = "menu.html";
-			} else {
-			  document.getElementById("status").textContent = data.message;
+		  xhr.open("GET", url, true);
+		  xhr.onreadystatechange = function () {
+			if (xhr.readyState === 4) {
+			  const rawResponse = xhr.responseText;
+			  document.getElementById("status").textContent = `RESPON MENTAH: ${rawResponse}`;
+			  try {
+				const data = JSON.parse(rawResponse);
+				if (data.success) {
+				  localStorage.setItem("username", data.username);
+				  window.location.href = "menu.html";
+				} else {
+				  document.getElementById("status").textContent = data.message;
+				}
+			  } catch (e) {
+				document.getElementById("status").textContent = `Gagal parsing server. Respon mentah: ${rawResponse}`;
+			  }
 			}
-		  } catch (e) {
-			document.getElementById("status").textContent = "Gagal parsing server.";
-		  }
+		  };
+		  xhr.onerror = function () {
+			document.getElementById("status").textContent = "Gagal menghubungi server.";
+		  };
+		  xhr.send();
 		}
-	  };
-	  xhr.onerror = function () {
-		document.getElementById("status").textContent = "Gagal menghubungi server.";
-	  };
-	  xhr.send();
-	}
+
 
   </script>
 </body>
