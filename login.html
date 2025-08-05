@@ -80,31 +80,33 @@
     const scriptURL = "https://script.google.com/macros/s/AKfycbxDVG6LiYtIT6ieLuqyCej4cgK7Dx4cAhiVSTA9newoh-AjLE9TXJsPpG6NAV-VpJvi/exec";
 
     function login() {
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value.trim();
+	  const username = document.getElementById("username").value;
+	  const password = document.getElementById("password").value;
+	  const xhr = new XMLHttpRequest();
+	  const url = `${scriptURL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
 
-      if (!username || !password) {
-        document.getElementById("status").textContent = "Username dan password wajib diisi.";
-        return;
-      }
+	  xhr.open("GET", url, true);
+	  xhr.onreadystatechange = function () {
+		if (xhr.readyState === 4) {
+		  try {
+			const data = JSON.parse(xhr.responseText);
+			if (data.success) {
+			  localStorage.setItem("username", data.username);
+			  window.location.href = "menu.html";
+			} else {
+			  document.getElementById("status").textContent = data.message;
+			}
+		  } catch (e) {
+			document.getElementById("status").textContent = "Gagal parsing server.";
+		  }
+		}
+	  };
+	  xhr.onerror = function () {
+		document.getElementById("status").textContent = "Gagal menghubungi server.";
+	  };
+	  xhr.send();
+	}
 
-      document.getElementById("status").textContent = "Memproses login...";
-
-      fetch(`${scriptURL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            localStorage.setItem("username", data.username);
-            window.location.href = "menu.html";
-          } else {
-            document.getElementById("status").textContent = data.message;
-          }
-        })
-        .catch(err => {
-          console.error(err);
-          document.getElementById("status").textContent = "Gagal menghubungi server.";
-        });
-    }
   </script>
 </body>
 </html>
