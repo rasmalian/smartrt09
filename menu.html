@@ -107,9 +107,9 @@
 		  <span class="material-icons">upload</span> Kumpul
 		</button>
 
-		<a class="button whatsapp" href="https://api.whatsapp.com/send/?phone=6285737419459&text&type=phone_number&app_absent=0" target="_blank">
+		<button class="button whatsapp" onclick="bukawa()">
 		  <span class="material-icons">whatsapp</span> WA mas RT
-		</a>
+		</button>
 
 
   <!-- Output -->
@@ -136,6 +136,14 @@
           document.getElementById("output").textContent = data.success ? "Terkirim!" : "Gagal kirim.";
         });
     }
+	
+	function bukawa() {
+	  window.open(
+		"https://api.whatsapp.com/send/?phone=6285737419459&text&type=phone_number&app_absent=0",
+		"_blank"
+	  );
+	}
+
 
     function ambilData() {
       fetch(`${scriptURL}?action=ambil`)
