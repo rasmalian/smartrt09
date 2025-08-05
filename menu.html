@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Menu</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; }
+    button { margin-top: 1rem; padding: 0.5rem 1rem; }
+  </style>
+</head>
+<body>
+  <h2>Menu</h2>
+  <p>Selamat datang, <span id="userDisplay"></span></p>
+  <button onclick="kirimData()">Kirim ke Sheet</button>
+  <button onclick="ambilData()">Ambil & Hapus Data</button>
+  <pre id="output"></pre>
+
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxDVG6LiYtIT6ieLuqyCej4cgK7Dx4cAhiVSTA9newoh-AjLE9TXJsPpG6NAV-VpJvi/exec";
+    const username = localStorage.getItem("username");
+
+    document.getElementById("userDisplay").textContent = username || "Tidak diketahui";
+
+    function kirimData() {
+      fetch(`${scriptURL}?action=kirim&username=${encodeURIComponent(username)}`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("output").textContent = data.success ? "Terkirim!" : "Gagal kirim.";
+        });
+    }
+
+    function ambilData() {
+      fetch(`${scriptURL}?action=ambil`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            document.getElementById("output").textContent = `Username: ${data.username}\nWaktu: ${data.waktu}`;
+          } else {
+            document.getElementById("output").textContent = data.message;
+          }
+        });
+    }
+  </script>
+</body>
+</html>
