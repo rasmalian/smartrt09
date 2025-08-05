@@ -1,62 +1,49 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
   <style>
     body {
       font-family: sans-serif;
-      padding: 1.5rem;
+      padding: 2rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      background-color: #f7f7f7;
     }
+
     img {
       width: 200px;
-      height: auto;
+      height: 200px;
+      object-fit: contain;
       margin-bottom: 1rem;
     }
-    h2 {
-      margin-bottom: 1rem;
-    }
+
     input, button {
       width: 100%;
       max-width: 300px;
-      margin: 0.5rem 0;
       padding: 0.75rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
+      margin-bottom: 1rem;
       font-size: 1rem;
     }
-    button {
-      background-color: #2196f3;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #1976d2;
-    }
+
     #status {
-      margin-top: 1rem;
-      color: #d32f2f;
-      white-space: pre-wrap;
+      color: red;
+      font-weight: bold;
       text-align: center;
     }
   </style>
 </head>
 <body>
 
-  <!-- Gambar Logo -->
-  <img src="logo.png" alt="Logo">
-
+  <img src="logo.png" alt="Logo"> <!-- Ganti dengan file logo kamu -->
   <h2>Login</h2>
+
   <input type="text" id="username" placeholder="Username" />
   <input type="password" id="password" placeholder="Password" />
   <button onclick="login()">Login</button>
-  <pre id="status"></pre>
+  <p id="status"></p>
 
   <script>
     const scriptURL = "https://script.google.com/macros/s/AKfycbxDVG6LiYtIT6ieLuqyCej4cgK7Dx4cAhiVSTA9newoh-AjLE9TXJsPpG6NAV-VpJvi/exec";
@@ -64,35 +51,42 @@
     function login() {
       const username = document.getElementById("username").value.trim();
       const password = document.getElementById("password").value.trim();
-      const statusEl = document.getElementById("status");
+      const status = document.getElementById("status");
 
-      if (!username || !password) {
-        statusEl.textContent = "Mohon isi semua kolom.";
-        return;
-      }
-
-      statusEl.textContent = "Sedang login...";
+      status.textContent = "Memproses...";
 
       fetch(`${scriptURL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
-        .then(res => res.text())
-        .then(text => {
-          try {
-            const data = JSON.parse(text);
-            if (data.success) {
-              localStorage.setItem("username", data.username);
-              window.location.href = "menu.html";
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            localStorage.setItem("username", data.username);
+
+            if (window.AppInventor) {
+              // Kirim JSON ke App Inventor
+              window.AppInventor.setWebViewString(JSON.stringify({
+                status: "success",
+                username: data.username
+              }));
             } else {
-              statusEl.textContent = data.message || "Login gagal.";
+              // Jika bukan dari App Inventor, redirect ke menu
+              window.location.href = "menu.html";
             }
-          } catch (e) {
-            statusEl.textContent = "Gagal parsing server. Respon mentah:\n" + text;
+          } else {
+            if (window.AppInventor) {
+              window.AppInventor.setWebViewString(JSON.stringify({
+                status: "error",
+                message: data.message || "Login gagal"
+              }));
+            } else {
+              status.textContent = data.message || "Login gagal";
+            }
           }
         })
         .catch(err => {
-          statusEl.textContent = "Gagal menghubungi server.";
-        });
-    }
-  </script>
-
-</body>
-</html>
+          if (window.AppInventor) {
+            window.AppInventor.setWebViewString(JSON.stringify({
+              status: "error",
+              message: "Gagal menghubungi server"
+            }));
+          } else {
+            status.textContent = "Gagal menghubungi server";
