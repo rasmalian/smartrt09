@@ -1,115 +1,98 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: sans-serif;
       padding: 1.5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      background-color: #f9f9f9;
+      background-color: #f7f7f7;
     }
-
-    .container {
-      width: 100%;
-      max-width: 400px;
-      background: #fff;
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    img.logo {
+    img {
       width: 200px;
-      height: 200px;
-      object-fit: contain;
+      height: auto;
       margin-bottom: 1rem;
     }
-
     h2 {
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-
-    input {
-      width: 100%;
-      padding: 0.75rem;
       margin-bottom: 1rem;
+    }
+    input, button {
+      width: 100%;
+      max-width: 300px;
+      margin: 0.5rem 0;
+      padding: 0.75rem;
+      border-radius: 6px;
       border: 1px solid #ccc;
-      border-radius: 5px;
       font-size: 1rem;
     }
-
     button {
-      width: 100%;
-      padding: 0.75rem;
-      background-color: #007bff;
+      background-color: #2196f3;
       color: white;
       border: none;
-      border-radius: 5px;
-      font-size: 1rem;
       cursor: pointer;
     }
-
     button:hover {
-      background-color: #0056b3;
+      background-color: #1976d2;
     }
-
     #status {
       margin-top: 1rem;
+      color: #d32f2f;
+      white-space: pre-wrap;
       text-align: center;
-      color: red;
     }
   </style>
 </head>
 <body>
-  <img src="logo.png" alt="Logo" class="logo" />
-  <div class="container">
-    <h2>Login</h2>
-    <input type="text" id="username" placeholder="Username" autocomplete="username" />
-    <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
-    <button onclick="login()">Login</button>
-    <p id="status"></p>
-  </div>
+
+  <!-- Gambar Logo -->
+  <img src="logo.png" alt="Logo">
+
+  <h2>Login</h2>
+  <input type="text" id="username" placeholder="Username" />
+  <input type="password" id="password" placeholder="Password" />
+  <button onclick="login()">Login</button>
+  <pre id="status"></pre>
 
   <script>
     const scriptURL = "https://script.google.com/macros/s/AKfycbxDVG6LiYtIT6ieLuqyCej4cgK7Dx4cAhiVSTA9newoh-AjLE9TXJsPpG6NAV-VpJvi/exec";
 
     function login() {
-		  const username = document.getElementById("username").value;
-		  const password = document.getElementById("password").value;
-		  const xhr = new XMLHttpRequest();
-		  const url = `${scriptURL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const statusEl = document.getElementById("status");
 
-		  xhr.open("GET", url, true);
-		  xhr.onreadystatechange = function () {
-			if (xhr.readyState === 4) {
-			  const rawResponse = xhr.responseText;
-			  document.getElementById("status").textContent = `RESPON MENTAH: ${rawResponse}`;
-			  try {
-				const data = JSON.parse(rawResponse);
-				if (data.success) {
-				  localStorage.setItem("username", data.username);
-				  window.location.href = "menu.html";
-				} else {
-				  document.getElementById("status").textContent = data.message;
-				}
-			  } catch (e) {
-				document.getElementById("status").textContent = `Gagal parsing server. Respon mentah: ${rawResponse}`;
-			  }
-			}
-		  };
-		  xhr.onerror = function () {
-			document.getElementById("status").textContent = "Gagal menghubungi server.";
-		  };
-		  xhr.send();
-		}
+      if (!username || !password) {
+        statusEl.textContent = "Mohon isi semua kolom.";
+        return;
+      }
 
+      statusEl.textContent = "Sedang login...";
 
+      fetch(`${scriptURL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
+        .then(res => res.text())
+        .then(text => {
+          try {
+            const data = JSON.parse(text);
+            if (data.success) {
+              localStorage.setItem("username", data.username);
+              window.location.href = "menu.html";
+            } else {
+              statusEl.textContent = data.message || "Login gagal.";
+            }
+          } catch (e) {
+            statusEl.textContent = "Gagal parsing server. Respon mentah:\n" + text;
+          }
+        })
+        .catch(err => {
+          statusEl.textContent = "Gagal menghubungi server.";
+        });
+    }
   </script>
+
 </body>
 </html>
