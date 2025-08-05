@@ -2,44 +2,106 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Login</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body { font-family: sans-serif; padding: 2rem; text-align: center; }
-    img { max-width: 200px; margin-bottom: 1rem; }
-    input, button { margin-top: 0.5rem; padding: 0.5rem; width: 100%; max-width: 300px; }
-    #status { margin-top: 1rem; color: red; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #f9f9f9;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    img.logo {
+      width: 200px;
+      height: 200px;
+      object-fit: contain;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #status {
+      margin-top: 1rem;
+      text-align: center;
+      color: red;
+    }
   </style>
 </head>
 <body>
-  <img src="logo.png" alt="Logo" />
-  <h2>Login</h2>
-  <input type="text" id="username" placeholder="Username" /><br />
-  <input type="password" id="password" placeholder="Password" /><br />
-  <button onclick="login()">Login</button>
-  <p id="status"></p>
+  <img src="logo.png" alt="Logo" class="logo" />
+  <div class="container">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Username" autocomplete="username" />
+    <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
+    <button onclick="login()">Login</button>
+    <p id="status"></p>
+  </div>
 
   <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbxDVG6LiYtIT6ieLuqyCej4cgK7Dx4cAhiVSTA9newoh-AjLE9TXJsPpG6NAV-VpJvi/exec";
+    const scriptURL = "https://script.google.com/macros/s/AKfycbzjpyndXKehoxjjr2r2_PpWGQEz2vhEJ-xY0yTJI9jxeT3dCSm3AoPK5jVJkVhnTdw9/exec";
 
     function login() {
       const username = document.getElementById("username").value.trim();
       const password = document.getElementById("password").value.trim();
 
+      if (!username || !password) {
+        document.getElementById("status").textContent = "Username dan password wajib diisi.";
+        return;
+      }
+
+      document.getElementById("status").textContent = "Memproses login...";
+
       fetch(`${scriptURL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
         .then(res => res.json())
         .then(data => {
-          document.getElementById("status").textContent = JSON.stringify(data); // sementara ditampilkan mentah
-
           if (data.success) {
             localStorage.setItem("username", data.username);
-            WebViewBridge?.send?.(JSON.stringify({ status: "success", username: data.username }));
             window.location.href = "menu.html";
           } else {
             document.getElementById("status").textContent = data.message;
           }
         })
         .catch(err => {
+          console.error(err);
           document.getElementById("status").textContent = "Gagal menghubungi server.";
         });
     }
