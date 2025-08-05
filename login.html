@@ -62,15 +62,11 @@
             localStorage.setItem("username", data.username);
 
             if (window.AppInventor) {
-              // Kirim JSON ke App Inventor
-              window.AppInventor.setWebViewString(JSON.stringify({
-                status: "success",
-                username: data.username
-              }));
-            } else {
-              // Jika bukan dari App Inventor, redirect ke menu
-              window.location.href = "menu.html";
-            }
+			  window.AppInventor.setWebViewString(JSON.stringify({ success: true, username }));
+			} else {
+			  window.location.href = "menu.html"; // fallback jika bukan dari AppInventor
+			}
+
           } else {
             if (window.AppInventor) {
               window.AppInventor.setWebViewString(JSON.stringify({
