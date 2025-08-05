@@ -3,58 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <title>Login</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body {
-      font-family: sans-serif;
-      padding: 2rem;
-      background: #f4f4f4;
-    }
-    h2 {
-      text-align: center;
-    }
-    input, button {
-      display: block;
-      width: 100%;
-      padding: 1rem;
-      margin: 1rem 0;
-      font-size: 1rem;
-    }
+    body { font-family: sans-serif; padding: 2rem; text-align: center; }
+    img { max-width: 200px; margin-bottom: 1rem; }
+    input, button { margin-top: 0.5rem; padding: 0.5rem; width: 100%; max-width: 300px; }
+    #status { margin-top: 1rem; color: red; }
   </style>
 </head>
 <body>
+  <img src="logo.png" alt="Logo" />
   <h2>Login</h2>
-  <input type="text" id="username" placeholder="Username">
-  <input type="password" id="password" placeholder="Password">
+  <input type="text" id="username" placeholder="Username" /><br />
+  <input type="password" id="password" placeholder="Password" /><br />
   <button onclick="login()">Login</button>
   <p id="status"></p>
 
   <script>
-    const apiUrl = "https://script.google.com/macros/s/AKfycbxDVG6LiYtIT6ieLuqyCej4cgK7Dx4cAhiVSTA9newoh-AjLE9TXJsPpG6NAV-VpJvi/exec";
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxDVG6LiYtIT6ieLuqyCej4cgK7Dx4cAhiVSTA9newoh-AjLE9TXJsPpG6NAV-VpJvi/exec";
 
     function login() {
       const username = document.getElementById("username").value.trim();
       const password = document.getElementById("password").value.trim();
 
-      document.getElementById("status").textContent = "Memproses...";
-
-      fetch(`${apiUrl}?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
-        .then(response => response.json())
+      fetch(`${scriptURL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
+        .then(res => res.json())
         .then(data => {
+          document.getElementById("status").textContent = JSON.stringify(data); // sementara ditampilkan mentah
+
           if (data.success) {
-            // Kirim ke App Inventor sebagai JSON string
-            const result = JSON.stringify({status: "success", username: data.username});
-            window.AppInventor.setWebViewString(result);
+            localStorage.setItem("username", data.username);
+            WebViewBridge?.send?.(JSON.stringify({ status: "success", username: data.username }));
+            window.location.href = "menu.html";
           } else {
-            document.getElementById("status").textContent = "Login gagal. Coba lagi.";
-            const result = JSON.stringify({status: "failed", message: "Login gagal"});
-            window.AppInventor.setWebViewString(result);
+            document.getElementById("status").textContent = data.message;
           }
         })
         .catch(err => {
-          document.getElementById("status").textContent = "Gagal terhubung ke server.";
-          const result = JSON.stringify({status: "error", message: err.toString()});
-          window.AppInventor.setWebViewString(result);
+          document.getElementById("status").textContent = "Gagal menghubungi server.";
         });
     }
   </script>
