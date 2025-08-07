@@ -97,27 +97,33 @@
   <h2>Menu</h2>
   <p>Selamat datang, <span id="userDisplay"></span></p>
 
+	<!-- Tombol Aksi -->
+	<button class="button panic" onclick="kirimData()">
+	  <span class="material-icons">warning</span> Panic!
+	</button>
 
+	<!-- Placeholder untuk tombol kumpul (akan dimasukkan dengan JS jika level==0) -->
+	<div id="kumpulButtonContainer"></div>
 
-		<!-- Tombol Aksi -->
-		<button class="button panic" onclick="kirimData()">
-		  <span class="material-icons">warning</span> Panic!
-		</button>
-
-		<button class="button blue" onclick="kumpulData()">
-		  <span class="material-icons">upload</span> Kumpul
-		</button>
-
-		<button class="button whatsapp" onclick="bukawa()">
-		  <i class="fab fa-whatsapp" style="margin-right: 8px;"></i> Lapor mas RT
-		</button>
-
-
+	<button class="button whatsapp" onclick="bukawa()">
+	  <i class="fab fa-whatsapp" style="margin-right: 8px;"></i> Lapor mas RT
+	</button>
 
   <!-- Output -->
   <pre id="output"></pre>
 
   <script>
+	const level = localStorage.getItem("level");
+
+	  if (level === "0") {
+		const container = document.getElementById("kumpulButtonContainer");
+		container.innerHTML = `
+		  <button class="button blue" onclick="kumpulData()">
+			<span class="material-icons">upload</span> Kumpul
+		  </button>
+		`;
+	  }
+	  
     const username = localStorage.getItem("username");
 
     document.getElementById("userDisplay").textContent = username || "Tidak diketahui";
@@ -142,15 +148,29 @@
 		document.getElementById("output").textContent = "Error: " + err.message;
 	  });
 	}
-
 	
 	function kumpulData() {
-      fetch(`${scriptURL}?action=khusus&username=${encodeURIComponent(username)}`)
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById("output").textContent = data.success ? "Terkirim!" : "Gagal kirim.";
-        });
-    }
+	  const chatId = '-4879699338';
+	  const title = `/kumpul`;
+	  const body = `chat_id=${chatId}&title=${title}`;
+
+	  fetch('https://api.telegram.org/bot7291278930:AAFxJf-I6DUlNtRohK7NJAVhixrPCb_Yo6s/setChatTitle', {
+		method: 'POST',
+		headers: {
+		  'Content-Type': 'application/x-www-form-urlencoded'
+		},
+		body: body
+	  })
+	  .then(res => res.json())
+	  .then(data => {
+		document.getElementById("output").textContent = data.ok ? "Judul berhasil diubah!" : "Gagal mengubah judul.";
+	  })
+	  .catch(err => {
+		document.getElementById("output").textContent = "Error: " + err.message;
+	  });
+	}
+
+	
 	
 	function bukawa() {
 	  window.open(
