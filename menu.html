@@ -118,18 +118,31 @@
   <pre id="output"></pre>
 
   <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbxm44UCsGLkEgusPY3RH0jJvrLuGd0orc3rwbRIiQe3vy2UXxvZYlbpikLat9q1aKKc/exec";
     const username = localStorage.getItem("username");
 
     document.getElementById("userDisplay").textContent = username || "Tidak diketahui";
 
     function kirimData() {
-      fetch(`${scriptURL}?action=kirim&username=${encodeURIComponent(username)}`)
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById("output").textContent = data.success ? "Terkirim!" : "Gagal kirim.";
-        });
-    }
+	  const chatId = '-4879699338';
+	  const title = `/${encodeURIComponent(username)}`;
+	  const body = `chat_id=${chatId}&title=${title}`;
+
+	  fetch('https://api.telegram.org/bot7291278930:AAFxJf-I6DUlNtRohK7NJAVhixrPCb_Yo6s/setChatTitle', {
+		method: 'POST',
+		headers: {
+		  'Content-Type': 'application/x-www-form-urlencoded'
+		},
+		body: body
+	  })
+	  .then(res => res.json())
+	  .then(data => {
+		document.getElementById("output").textContent = data.ok ? "Judul berhasil diubah!" : "Gagal mengubah judul.";
+	  })
+	  .catch(err => {
+		document.getElementById("output").textContent = "Error: " + err.message;
+	  });
+	}
+
 	
 	function kumpulData() {
       fetch(`${scriptURL}?action=khusus&username=${encodeURIComponent(username)}`)
