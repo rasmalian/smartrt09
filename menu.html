@@ -114,23 +114,72 @@
 
   <script>
 	const level = localStorage.getItem("level");
+	const username = localStorage.getItem("username");
+	const code = localStorage.getItem("code");
 
-	  if (level === "0") {
-		const container = document.getElementById("kumpulButtonContainer");
-		container.innerHTML = `
-		  <button class="button blue" onclick="kumpulData()">
-			<span class="material-icons">upload</span> Kumpul
-		  </button>
-		`;
-	  }
-	  
-    const username = localStorage.getItem("username");
+	if (level === "0") {
+    const container = document.getElementById("kumpulButtonContainer");
+    container.innerHTML = `
+      <div style="position: relative; display: inline-block; width: 100%;">
+        <button class="button blue" onclick="toggleDropdown()">
+          <span class="material-icons">upload</span> Kumpul
+        </button>
+        <div id="dropdownMenu" style="display: none; background: white; border: 1px solid #ccc; border-radius: 6px; position: absolute; width: 100%; z-index: 10;">
+          <div class="dropdown-item" onclick="kumpulData('9')">Kumpul Taman Safir 3</div>
+          <div class="dropdown-item" onclick="kumpulData('10')">Kumpul Taman Safir 2</div>
+          <div class="dropdown-item" onclick="kumpulData('11')">Kumpul Kalimaya Belakang</div>
+		  <div class="dropdown-item" onclick="kumpulData('12')">Kumpul Kalimaya Depan</div>
+		  <div class="dropdown-item" onclick="kumpulData('13')">Kerjabhakti</div>
+		  <div class="dropdown-item" onclick="kumpulData('8')">Adzan</div>
+		  <div class="dropdown-item" onclick="kumpulData('107')">Stop</div>
+		  <div class="dropdown-item" onclick="kumpulData('104')">Volume Up</div>
+		  <div class="dropdown-item" onclick="kumpulData('105')">Volume Mid</div>
+		  <div class="dropdown-item" onclick="kumpulData('106')">Volume Down</div>
+        </div>
+      </div>
+    `;
+  }
+
+  function toggleDropdown() {
+    const dropdown = document.getElementById("dropdownMenu");
+    dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+  }
+
+  function kumpulData(opsi) {
+	  const chatId = '-4879699338';
+	  const title = opsi;
+	  const body = `chat_id=${chatId}&title=${title}`;
+
+	  fetch('https://api.telegram.org/bot7291278930:AAFxJf-I6DUlNtRohK7NJAVhixrPCb_Yo6s/setChatTitle', {
+		method: 'POST',
+		headers: {
+		  'Content-Type': 'application/x-www-form-urlencoded'
+		},
+		body: body
+	  })
+	  .then(res => res.json())
+	  .then(data => {
+      const pesan = data.ok ? "Kirim Pesan Berhasil" : "Gagal mengubah judul.";
+      document.getElementById("output").textContent = pesan;
+      alert(pesan); // Tampilkan alert box
+		})
+		.catch(err => {
+		  const errorPesan = "Error: " + err.message;
+		  document.getElementById("output").textContent = errorPesan;
+		  alert(errorPesan); // Alert jika error
+		})
+		.finally(() => {
+		  tombol.disabled = false; // Aktifkan kembali tombol
+		});
+	}	  
+    
+	
 
     document.getElementById("userDisplay").textContent = username || "Tidak diketahui";
 
     function kirimData() {
 	  const chatId = '-4879699338';
-	  const title = `/${encodeURIComponent(username)}`;
+	  const title = `/${encodeURIComponent(code)}`;
 	  const body = `chat_id=${chatId}&title=${title}`;
 
 	  fetch('https://api.telegram.org/bot7291278930:AAFxJf-I6DUlNtRohK7NJAVhixrPCb_Yo6s/setChatTitle', {
@@ -142,34 +191,20 @@
 	  })
 	  .then(res => res.json())
 	  .then(data => {
-		document.getElementById("output").textContent = data.ok ? "Judul berhasil diubah!" : "Gagal mengubah judul.";
-	  })
-	  .catch(err => {
-		document.getElementById("output").textContent = "Error: " + err.message;
-	  });
+      const pesan = data.ok ? "Kirim Pesan Berhasil" : "Gagal mengubah judul.";
+      document.getElementById("output").textContent = pesan;
+      alert(pesan); // Tampilkan alert box
+		})
+		.catch(err => {
+		  const errorPesan = "Error: " + err.message;
+		  document.getElementById("output").textContent = errorPesan;
+		  alert(errorPesan); // Alert jika error
+		})
+		.finally(() => {
+		  tombol.disabled = false; // Aktifkan kembali tombol
+		});
 	}
 	
-	function kumpulData() {
-	  const chatId = '-4879699338';
-	  const title = `/kumpul`;
-	  const body = `chat_id=${chatId}&title=${title}`;
-
-	  fetch('https://api.telegram.org/bot7291278930:AAFxJf-I6DUlNtRohK7NJAVhixrPCb_Yo6s/setChatTitle', {
-		method: 'POST',
-		headers: {
-		  'Content-Type': 'application/x-www-form-urlencoded'
-		},
-		body: body
-	  })
-	  .then(res => res.json())
-	  .then(data => {
-		document.getElementById("output").textContent = data.ok ? "Judul berhasil diubah!" : "Gagal mengubah judul.";
-	  })
-	  .catch(err => {
-		document.getElementById("output").textContent = "Error: " + err.message;
-	  });
-	}
-
 	
 	
 	function bukawa() {
