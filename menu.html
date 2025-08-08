@@ -245,7 +245,17 @@
 		.finally(() => {
 		  tombol.disabled = false; // Aktifkan kembali tombol
 		});
-	document.getElementById("dropdownBox").classList.remove("active");	
+	
+	  const dropdownBox = document.getElementById("dropdownBox");
+	  dropdownBox.classList.remove("active");
+
+	  // Fallback: pastikan dropdown tetap tertutup
+	  const dropdownMenu = document.getElementById("dropdownMenu");
+	  if (dropdownMenu) {
+		dropdownMenu.style.display = "none";
+	  }
+
+	
 	}	  
     
 	
