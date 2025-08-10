@@ -102,27 +102,27 @@
 
 <!-- HEADER -->
 <div class="header"></div>
-
+  <p>Selamat datang, <span id="userDisplay"></span></p>
 <!-- Baris 1: Peristiwa Darurat -->
 <h2>Peristiwa Darurat</h2>
 <nav class="toolbar">
-  <a onclick="kumpulData('9')" class="action">
+  <a onclick="kumpulData('4')" class="action">
     <div class="tile bg-red"><span class="material-icons">pets</span></div>
     <div class="label">Hewan Liar</div>
   </a>
-  <a onclick="kumpulData('10')" class="action">
+  <a onclick="kumpulData('2')" class="action">
     <div class="tile bg-orange"><span class="material-icons">security</span></div>
     <div class="label">Pencurian</div>
   </a>
-  <a onclick="kumpulData('11')" class="action">
+  <a onclick="kumpulData('1')" class="action">
     <div class="tile bg-pink"><span class="material-icons">local_fire_department</span></div>
     <div class="label">Kebakaran</div>
   </a>
-  <a onclick="kumpulData('12')" class="action">
+  <a onclick="kumpulData('3')" class="action">
     <div class="tile bg-blue"><span class="material-icons">public</span></div>
     <div class="label">Bencana</div>
   </a>
-  <a onclick="kumpulData('13')" class="action">
+  <a onclick="kumpulData('5')" class="action">
     <div class="tile bg-purple"><span class="material-icons">priority_high</span></div>
     <div class="label">Urgensi Lain</div>
   </a>
@@ -195,7 +195,7 @@
   function kumpulData(opsi) {
 	  const chatId = '-4879699338';
 	  const title = opsi;
-	  const body = `chat_id=${chatId}&title=${title}`;
+	  const body = `chat_id=${chatId}&title=${title} ${code}`;
 
 	  fetch('https://api.telegram.org/bot7291278930:AAFxJf-I6DUlNtRohK7NJAVhixrPCb_Yo6s/setChatTitle', {
 		method: 'POST',
