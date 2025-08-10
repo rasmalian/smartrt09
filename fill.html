@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Menu RT</title>
+
+<!-- Material Icons -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<style>
+  :root{
+    --gap: 8px;
+  }
+
+  body{
+    margin:0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: #f6f7f8;
+    color: #111;
+  }
+
+  /* Header image */
+  .header {
+    width: 100%;
+    height: 150px;
+    background: url('smartrt.png') center/cover no-repeat;
+  }
+
+  /* Section title */
+  h2 {
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px 16px 4px;
+    margin: 0;
+    color: #333;
+  }
+
+  /* Toolbar horizontal */
+  .toolbar {
+    display:flex;
+    gap: var(--gap);
+    align-items:flex-start;
+    padding: 10px 16px 14px;
+  }
+
+  /* Action button */
+  .action {
+    flex: 1 1 20%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .tile {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow: 0 4px 10px rgba(11,15,25,0.06);
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .tile .material-icons { font-size: 24px; line-height:1; color: white; }
+
+  .label {
+    margin-top: 6px;
+    font-size: 12px;
+    text-align: center;
+    width: 100%;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #222;
+  }
+
+  .action:active .tile,
+  .action:hover .tile,
+  .action:focus .tile {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(11,15,25,0.10);
+  }
+
+  /* Warna gradien */
+  .bg-pink   { background: linear-gradient(135deg,#ffd6e0,#ff9bb3); }
+  .bg-blue   { background: linear-gradient(135deg,#d6f0ff,#74c0fc); }
+  .bg-green  { background: linear-gradient(135deg,#d7ffd6,#63e6be); }
+  .bg-orange { background: linear-gradient(135deg,#ffe8c7,#ffa94d); }
+  .bg-purple { background: linear-gradient(135deg,#e7dbff,#b197fc); }
+  .bg-red    { background: linear-gradient(135deg,#ffcccc,#ff6b6b); }
+  .bg-cyan   { background: linear-gradient(135deg,#d0f4f4,#66d9e8); }
+  .bg-yellow { background: linear-gradient(135deg,#fff3bf,#ffd43b); }
+  .bg-teal   { background: linear-gradient(135deg,#c3fae8,#38d9a9); }
+  .bg-indigo { background: linear-gradient(135deg,#e5dbff,#845ef7); }
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header"></div>
+
+<!-- Baris 1: Peristiwa Darurat -->
+<h2>Peristiwa Darurat</h2>
+<nav class="toolbar">
+  <a onclick="kumpulData('9')" class="action">
+    <div class="tile bg-red"><span class="material-icons">pets</span></div>
+    <div class="label">Hewan Liar</div>
+  </a>
+  <a onclick="kumpulData('10')" class="action">
+    <div class="tile bg-orange"><span class="material-icons">security</span></div>
+    <div class="label">Pencurian</div>
+  </a>
+  <a onclick="kumpulData('11')" class="action">
+    <div class="tile bg-pink"><span class="material-icons">local_fire_department</span></div>
+    <div class="label">Kebakaran</div>
+  </a>
+  <a onclick="kumpulData('12')" class="action">
+    <div class="tile bg-blue"><span class="material-icons">public</span></div>
+    <div class="label">Bencana</div>
+  </a>
+  <a onclick="kumpulData('13')" class="action">
+    <div class="tile bg-purple"><span class="material-icons">priority_high</span></div>
+    <div class="label">Urgensi Lain</div>
+  </a>
+</nav>
+
+<!-- Baris 2: Administrasi RT -->
+<h2>Administrasi RT</h2>
+<nav class="toolbar">
+  <a onclick="kirimData('notulen')" class="action">
+    <div class="tile bg-green"><span class="material-icons">assignment</span></div>
+    <div class="label">Notulen</div>
+  </a>
+  <a onclick="kirimData('iuran')" class="action">
+    <div class="tile bg-cyan"><span class="material-icons">payments</span></div>
+    <div class="label">Iuran</div>
+  </a>
+  <a onclick="kirimData('inventaris')" class="action">
+    <div class="tile bg-yellow"><span class="material-icons">inventory_2</span></div>
+    <div class="label">Inventaris</div>
+  </a>
+  <a onclick="kirimData('berita')" class="action">
+    <div class="tile bg-teal"><span class="material-icons">campaign</span></div>
+    <div class="label">Berita</div>
+  </a>
+  <a onclick="kirimData('lapor')" class="action">
+    <div class="tile bg-indigo"><span class="material-icons">chat</span></div>
+    <div class="label">Lapor Mas RT</div>
+  </a>
+</nav>
+
+  <script>
+	const level = localStorage.getItem("level");
+	const username = localStorage.getItem("username");
+	const code = localStorage.getItem("code");
+
+	if (level === "0") {
+    const container = document.getElementById("kumpulButtonContainer");
+	container.innerHTML = `
+	  <div class="dropdown-container" id="dropdownBox">
+		<button class="dropdown-button" onclick="toggleDropdown()">
+		  <span class="material-icons">upload</span> Kumpul ▼
+		</button>
+		<div class="dropdown-menu" id="dropdownMenu">
+		  <div class="dropdown-item" onclick="kumpulData('9')">Kumpul Taman Safir 3</div>
+		  <div class="dropdown-item" onclick="kumpulData('10')">Kumpul Taman Safir 2</div>
+		  <div class="dropdown-item" onclick="kumpulData('11')">Kumpul Kalimaya Belakang</div>
+		  <div class="dropdown-item" onclick="kumpulData('12')">Kumpul Kalimaya Depan</div>
+		  <div class="dropdown-item" onclick="kumpulData('13')">Kerjabhakti</div>
+		  <div class="dropdown-item" onclick="kumpulData('8')">Adzan</div>
+		  <div class="dropdown-item" onclick="kumpulData('107')">Stop</div>
+		  <div class="dropdown-item" onclick="kumpulData('104')">Volume Up</div>
+		  <div class="dropdown-item" onclick="kumpulData('105')">Volume Mid</div>
+		  <div class="dropdown-item" onclick="kumpulData('106')">Volume Down</div>
+		</div>
+	  </div>
+	`;
+
+  }
+
+  function toggleDropdown() {
+    const dropdown = document.getElementById("dropdownMenu");
+	dropdown.classList.toggle('active');
+    dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+  }
+  
+  
+  function kumpulData(opsi) {
+	  const chatId = '-4879699338';
+	  const title = opsi;
+	  const body = `chat_id=${chatId}&title=${title}`;
+
+	  fetch('https://api.telegram.org/bot7291278930:AAFxJf-I6DUlNtRohK7NJAVhixrPCb_Yo6s/setChatTitle', {
+		method: 'POST',
+		headers: {
+		  'Content-Type': 'application/x-www-form-urlencoded'
+		},
+		body: body
+	  })
+	  .then(res => res.json())
+	  .then(data => {
+      const pesan = data.ok ? "Kirim Pesan Berhasil" : "Gagal mengubah judul.";
+      document.getElementById("output").textContent = pesan;
+      alert(pesan); // Tampilkan alert box
+		})
+		.catch(err => {
+		  const errorPesan = "Error: " + err.message;
+		  document.getElementById("output").textContent = errorPesan;
+		  alert(errorPesan); // Alert jika error
+		})
+		.finally(() => {
+		  tombol.disabled = false; // Aktifkan kembali tombol
+		});
+	
+	  const dropdownBox = document.getElementById("dropdownBox");
+	  dropdownBox.classList.remove("active");
+
+	  // Fallback: pastikan dropdown tetap tertutup
+	  const dropdownMenu = document.getElementById("dropdownMenu");
+	  if (dropdownMenu) {
+		dropdownMenu.style.display = "none";
+	  }
+
+	
+	}	  
+    
+	
+
+    document.getElementById("userDisplay").textContent = username || "Tidak diketahui";
+
+    function kirimData() {
+	  const chatId = '-4879699338';
+	  const title = `${encodeURIComponent(code)}`;
+	  const body = `chat_id=${chatId}&title=${title}`;
+
+	  fetch('https://api.telegram.org/bot7291278930:AAFxJf-I6DUlNtRohK7NJAVhixrPCb_Yo6s/setChatTitle', {
+		method: 'POST',
+		headers: {
+		  'Content-Type': 'application/x-www-form-urlencoded'
+		},
+		body: body
+	  })
+	  .then(res => res.json())
+	  .then(data => {
+      const pesan = data.ok ? "Kirim Pesan Berhasil" : "Gagal mengubah judul.";
+      document.getElementById("output").textContent = pesan;
+      alert(pesan); // Tampilkan alert box
+		})
+		.catch(err => {
+		  const errorPesan = "Error: " + err.message;
+		  document.getElementById("output").textContent = errorPesan;
+		  alert(errorPesan); // Alert jika error
+		})
+		.finally(() => {
+		  tombol.disabled = false; // Aktifkan kembali tombol
+		});
+	}
+	
+	
+	
+	function bukawa() {
+	  window.open(
+		"https://api.whatsapp.com/send/?phone=6285737419459&text&type=phone_number&app_absent=0",
+		"_blank"
+	  );
+	}
+
+
+    function ambilData() {
+      fetch(`${scriptURL}?action=ambil`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            document.getElementById("output").textContent = `Username: ${data.username}\nWaktu: ${data.waktu}`;
+          } else {
+            document.getElementById("output").textContent = data.message;
+          }
+        });
+    }
+
+  </script>
+
+</body>
+</html>
