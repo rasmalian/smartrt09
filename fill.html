@@ -102,7 +102,7 @@
 
 <!-- HEADER -->
 <div class="header"></div>
-  <p>Selamat datang, <span id="userDisplay"></span></p>
+  <p>&nbsp;Selamat datang, <span id="userDisplay"></span></p>
 <!-- Baris 1: Peristiwa Darurat -->
 <h2>Peristiwa Darurat</h2>
 <nav class="toolbar">
@@ -160,6 +160,7 @@
 	const level = localStorage.getItem("level");
 	const username = localStorage.getItem("username");
 	const code = localStorage.getItem("code");
+	document.getElementById("userDisplay").textContent = username || "Tidak diketahui";
 
 	if (level === "0") {
     const container = document.getElementById("kumpulButtonContainer");
@@ -231,9 +232,6 @@
 	
 	}	  
     
-	
-
-    document.getElementById("userDisplay").textContent = username || "Tidak diketahui";
 
     function kirimData() {
 	  const chatId = '-4879699338';
