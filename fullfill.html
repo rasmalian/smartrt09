@@ -152,6 +152,57 @@
     <div class="label">Lapor Mas RT</div>
   </a>
 </nav>
+<!-- Baris 3: Rendezvous -->
+<h2>Rendezvous</h2>
+<nav class="toolbar">
+  <a onclick="kumpulData('11')" class="action">
+    <div class="tile bg-lime"><span class="material-icons">groups</span></div>
+    <div class="label">Kumpul Safir 3</div>
+  </a>
+  <a onclick="kumpulData('12')" class="action">
+    <div class="tile bg-amber"><span class="material-icons">event</span></div>
+    <div class="label">Kumpul Safir 2</div>
+  </a>
+  <a onclick="kumpulData('13')" class="action">
+    <div class="tile bg-light-blue"><span class="material-icons">emoji_people</span></div>
+    <div class="label">Kumpul Kalimaya Blk</div>
+  </a>
+  <a onclick="kumpulData('14')" class="action">
+    <div class="tile bg-deep-orange"><span class="material-icons">location_on</span></div>
+    <div class="label">Kumpul Kalimaya Dpn</div>
+  </a>
+  <a onclick="kumpulData('15')" class="action">
+    <div class="tile bg-deep-purple"><span class="material-icons">flag</span></div>
+    <div class="label">Kerjabhakti</div>
+  </a>
+</nav>
+
+<!-- Baris 4: Admin -->
+<h2>Admin</h2>
+<nav class="toolbar">
+  <a onclick="kumpulData('102')" class="action">
+    <div class="tile bg-light-green"><span class="material-icons">volume_down</span></div>
+    <div class="label">Volume Down</div>
+  </a>
+  <a onclick="kumpulData('103')" class="action">
+    <div class="tile bg-brown"><span class="material-icons">volume_mute</span></div>
+    <div class="label">Volume Mid</div>
+  </a>
+  <a onclick="kumpulData('104')" class="action">
+    <div class="tile bg-deep-purple accent-2"><span class="material-icons">volume_up</span></div>
+    <div class="label">Volume Up</div>
+  </a>
+  <a onclick="kumpulData('101')" class="action">
+    <div class="tile bg-grey"><span class="material-icons">stop_circle</span></div>
+    <div class="label">Stop</div>
+  </a>
+  <a onclick="control('extra')" class="action">
+    <div class="tile bg-indigo accent-2"><span class="material-icons">add_circle</span></div>
+    <div class="label">Additional</div>
+  </a>
+</nav>
+
+
 
   <!-- Output -->
   <pre id="output"></pre>
@@ -163,7 +214,26 @@
 	document.getElementById("userDisplay").textContent = username || "Tidak diketahui";
 
 	if (level === "0") {
-	window.location.href = "fullfill.html";
+    const container = document.getElementById("kumpulButtonContainer");
+	container.innerHTML = `
+	  <div class="dropdown-container" id="dropdownBox">
+		<button class="dropdown-button" onclick="toggleDropdown()">
+		  <span class="material-icons">upload</span> Kumpul ▼
+		</button>
+		<div class="dropdown-menu" id="dropdownMenu">
+		  <div class="dropdown-item" onclick="kumpulData('9')">Kumpul Taman Safir 3</div>
+		  <div class="dropdown-item" onclick="kumpulData('10')">Kumpul Taman Safir 2</div>
+		  <div class="dropdown-item" onclick="kumpulData('11')">Kumpul Kalimaya Belakang</div>
+		  <div class="dropdown-item" onclick="kumpulData('12')">Kumpul Kalimaya Depan</div>
+		  <div class="dropdown-item" onclick="kumpulData('13')">Kerjabhakti</div>
+		  <div class="dropdown-item" onclick="kumpulData('8')">Adzan</div>
+		  <div class="dropdown-item" onclick="kumpulData('107')">Stop</div>
+		  <div class="dropdown-item" onclick="kumpulData('104')">Volume Up</div>
+		  <div class="dropdown-item" onclick="kumpulData('105')">Volume Mid</div>
+		  <div class="dropdown-item" onclick="kumpulData('106')">Volume Down</div>
+		</div>
+	  </div>
+	`;
 
   }
 
