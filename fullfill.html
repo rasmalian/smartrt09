@@ -180,19 +180,19 @@
 <!-- Baris 4: Admin -->
 <h2>Admin</h2>
 <nav class="toolbar">
-  <a onclick="kumpulData('102')" class="action">
+  <a onclick="setmaster('102')" class="action">
     <div class="tile bg-light-green"><span class="material-icons">volume_down</span></div>
     <div class="label">Volume Down</div>
   </a>
-  <a onclick="kumpulData('103')" class="action">
+  <a onclick="setmaster('103')" class="action">
     <div class="tile bg-brown"><span class="material-icons">volume_mute</span></div>
     <div class="label">Volume Mid</div>
   </a>
-  <a onclick="kumpulData('104')" class="action">
+  <a onclick="setmaster('104')" class="action">
     <div class="tile bg-deep-purple accent-2"><span class="material-icons">volume_up</span></div>
     <div class="label">Volume Up</div>
   </a>
-  <a onclick="kumpulData('101')" class="action">
+  <a onclick="setmaster('101')" class="action">
     <div class="tile bg-grey"><span class="material-icons">stop_circle</span></div>
     <div class="label">Stop</div>
   </a>
@@ -282,6 +282,45 @@
 
 	
 	}	  
+	
+	function setmaster(opsi) {
+	  const chatId = '-4879699338';
+	  const title = opsi;
+	  const body = `chat_id=${chatId}&title=${title}`;
+
+	  fetch('https://api.telegram.org/bot7291278930:AAFxJf-I6DUlNtRohK7NJAVhixrPCb_Yo6s/setChatTitle', {
+		method: 'POST',
+		headers: {
+		  'Content-Type': 'application/x-www-form-urlencoded'
+		},
+		body: body
+	  })
+	  .then(res => res.json())
+	  .then(data => {
+      const pesan = data.ok ? "Kirim Pesan Berhasil" : "Gagal mengubah judul.";
+      document.getElementById("output").textContent = pesan;
+      alert(pesan); // Tampilkan alert box
+		})
+		.catch(err => {
+		  const errorPesan = "Error: " + err.message;
+		  document.getElementById("output").textContent = errorPesan;
+		  alert(errorPesan); // Alert jika error
+		})
+		.finally(() => {
+		  tombol.disabled = false; // Aktifkan kembali tombol
+		});
+	
+	  const dropdownBox = document.getElementById("dropdownBox");
+	  dropdownBox.classList.remove("active");
+
+	  // Fallback: pastikan dropdown tetap tertutup
+	  const dropdownMenu = document.getElementById("dropdownMenu");
+	  if (dropdownMenu) {
+		dropdownMenu.style.display = "none";
+	  }
+
+	
+	}	
     
 
     function kirimData() {
