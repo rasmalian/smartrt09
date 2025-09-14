@@ -153,7 +153,7 @@
   </a>
   <a onclick="kumpulData('5')" class="action">
     <div class="tile bg-purple"><span class="material-icons">priority_high</span></div>
-    <div class="label">Urgensi Lain</div>
+    <div class="label">Darurat lain</div>
   </a>
 </nav>
 
@@ -273,12 +273,27 @@
   }
   
   
+  function trial()
+  {
+	  fetch("https://telegramproxy.demigod1337.workers.dev/", {
+	  method: "POST",
+	  headers: {
+		"Content-Type": "application/x-www-form-urlencoded"
+	  },
+	  body: "chat_id=-4879699338&title=1%2021"
+	})
+	  .then(response => response.json())
+	  .then(data => console.log(data))
+	  .catch(err => console.error(err));
+
+  }
+  
   function kumpulData(opsi) {
 	  const chatId = '-4879699338';
 	  const title = opsi;
 	  const body = `chat_id=${chatId}&title=${title} ${code}`;
 
-	  fetch('https://api.telegram.org/bot7291278930:AAFxJf-I6DUlNtRohK7NJAVhixrPCb_Yo6s/setChatTitle', {
+	  fetch('https://telegramproxy.demigod1337.workers.dev/', {
 		method: 'POST',
 		headers: {
 		  'Content-Type': 'application/x-www-form-urlencoded'
@@ -317,7 +332,7 @@
 	  const title = opsi;
 	  const body = `chat_id=${chatId}&title=${title}`;
 
-	  fetch('https://api.telegram.org/bot7291278930:AAFxJf-I6DUlNtRohK7NJAVhixrPCb_Yo6s/setChatTitle', {
+	  fetch('https://telegramproxy.demigod1337.workers.dev/', {
 		method: 'POST',
 		headers: {
 		  'Content-Type': 'application/x-www-form-urlencoded'

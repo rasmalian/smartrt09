@@ -77,7 +77,7 @@
   </div>
 
   <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbwKJy1MZphrU7H4alr8OMVBKzvY9c5CUziL6rEsyJ3Eje0PTzWBpnrXc-x7ERkvoZmg/exec";
+    const scriptURL = "https://script.google.com/macros/s/AKfycbzz3TIh6O_v97tsT_0-2EMq5h8IF8JEP3koNMVKZJbW9zazpP_VUu2kvEn8whjfGOfn/exec";
 
     function login() {
       const username = document.getElementById("username").value.trim();
@@ -97,6 +97,7 @@
             localStorage.setItem("username", data.username);
 			localStorage.setItem("level", data.level);
 			localStorage.setItem("code", data.code);
+			localStorage.setItem("redirect",data.redirect);
             window.location.href = "fill.html";
           } else {
             document.getElementById("status").textContent = data.message;
