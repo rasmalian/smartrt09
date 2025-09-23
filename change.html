@@ -110,8 +110,10 @@
     const savedRedirect = localStorage.getItem("redirect");
     if (savedUsername && savedRedirect) {
       // langsung masuk tanpa login
-      window.location.href = savedRedirect;
-    }
+      //
+    }else {
+	window.location.href = 'login.html';
+	}
   });
 
   function change() {
