@@ -132,11 +132,7 @@
       .then(res => res.json())
       .then(data => {
         if (data.success) {
-          localStorage.setItem("username", data.username);
-          localStorage.setItem("level", data.level);
-          localStorage.setItem("code", data.code);
-          localStorage.setItem("redirect", data.redirect);
-          window.location.href = data.redirect;
+          window.location.href = 'login.html';
         } else {
           document.getElementById("status").textContent = data.message;
         }
