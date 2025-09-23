@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Change Password</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: #f6f7f8;
+      color: #111;
+    }
+
+    .header {
+      width: 100%;
+      height: 150px;
+      background: url('smartrt.png') center/cover no-repeat;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: -40px auto 0;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      padding: 24px;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    label {
+      font-size: 14px;
+      color: #444;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 16px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    input[type="password"]:focus {
+      border-color: #74c0fc;
+      outline: none;
+      box-shadow: 0 0 4px rgba(116,192,252,0.6);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg,#74c0fc,#228be6);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: linear-gradient(135deg,#4dabf7,#1c7ed6);
+    }
+
+    .note {
+      font-size: 12px;
+      text-align: center;
+      margin-top: 12px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header"></div>
+
+  <div class="container">
+    <h2>Change Password</h2>
+    <form method="POST" action="">
+      <label for="oldPassword">Password Lama</label>
+      <input type="password" id="oldPassword" name="oldPassword" required>
+
+      <label for="newPassword">Password Baru</label>
+      <input type="password" id="newPassword" name="newPassword" required>
+
+      <button onclick="change()">Ganti Password</button>
+    </form>
+    <div class="note">Pastikan password baru berbeda dengan sebelumnya.</div>
+  </div>
+
+</body>
+
+<script>
+	const scriptURL = "https://script.google.com/macros/s/AKfycbzjk5uPK_KWqmyQUlMlo3G2P0TXEgvTlLjgy_Tb2q7ec5tWRAAHDwxNzjDMT0s_mz4D/exec";
+
+  // Cek apakah user sudah login sebelumnya
+  window.addEventListener("DOMContentLoaded", () => {
+    const savedUsername = localStorage.getItem("username");
+    const savedRedirect = localStorage.getItem("redirect");
+    if (savedUsername && savedRedirect) {
+      // langsung masuk tanpa login
+      window.location.href = savedRedirect;
+    }
+  });
+
+  function change() {
+    const username = localStorage.getItem("username");
+    const oldPassword = document.getElementById("oldPassword").value.trim();
+	const newPassword = document.getElementById("newPassword").value.trim();
+
+    if (!oldPassword || !newPassword) {
+      document.getElementById("status").textContent = "Semua wajib diisi.";
+      return;
+    }
+
+    document.getElementById("status").textContent = "Memproses perubahan...";
+
+    fetch(`${scriptURL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          localStorage.setItem("username", data.username);
+          localStorage.setItem("level", data.level);
+          localStorage.setItem("code", data.code);
+          localStorage.setItem("redirect", data.redirect);
+          window.location.href = data.redirect;
+        } else {
+          document.getElementById("status").textContent = data.message;
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        document.getElementById("status").textContent = "Gagal menghubungi server.";
+      });
+  }
+</script>
+</html>
