@@ -128,7 +128,7 @@
 
     document.getElementById("status").textContent = "Memproses perubahan...";
 
-    fetch(`${scriptURL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
+    fetch(`${scriptURL}?action=change&username=${encodeURIComponent(username)}&oldPassword=${encodeURIComponent(oldPassword)}&newPassword=${encodeURIComponent(newPassword)}`)
       .then(res => res.json())
       .then(data => {
         if (data.success) {
