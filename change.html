@@ -2,145 +2,119 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Change Password</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ganti Password</title>
   <style>
     body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
       margin: 0;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background: #f6f7f8;
-      color: #111;
     }
-
-    .header {
-      width: 100%;
-      height: 150px;
-      background: url('smartrt.png') center/cover no-repeat;
-    }
-
     .container {
-      max-width: 400px;
-      margin: -40px auto 0;
       background: white;
+      padding: 20px;
       border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      width: 100%;
+      max-width: 360px;
     }
-
     h2 {
+      margin-bottom: 16px;
       text-align: center;
-      font-size: 18px;
-      margin-bottom: 20px;
-      color: #333;
     }
-
     label {
       font-size: 14px;
-      color: #444;
-      display: block;
       margin-bottom: 6px;
+      display: block;
     }
-
-    input[type="password"] {
+    input {
       width: 100%;
-      padding: 12px;
-      margin-bottom: 16px;
-      border: 1px solid #ddd;
+      padding: 10px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 14px;
     }
-
-    input[type="password"]:focus {
-      border-color: #74c0fc;
-      outline: none;
-      box-shadow: 0 0 4px rgba(116,192,252,0.6);
-    }
-
     button {
       width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg,#74c0fc,#228be6);
+      padding: 12px;
+      background: teal;
       color: white;
+      font-size: 16px;
       border: none;
       border-radius: 8px;
-      font-size: 15px;
-      font-weight: 600;
       cursor: pointer;
-      transition: background 0.3s;
     }
-
     button:hover {
-      background: linear-gradient(135deg,#4dabf7,#1c7ed6);
+      background: #006666;
     }
-
-    .note {
-      font-size: 12px;
-      text-align: center;
+    #status {
       margin-top: 12px;
-      color: #666;
+      font-size: 14px;
+      text-align: center;
+      color: #333;
     }
   </style>
 </head>
 <body>
-
-  <div class="header"></div>
-
   <div class="container">
-    <h2>Change Password</h2>
-    <form method="POST" action="">
-      <label for="oldPassword">Password Lama</label>
-      <input type="password" id="oldPassword" name="oldPassword" required>
+    <h2>Ganti Password</h2>
+    <label for="oldPassword">Password Lama</label>
+    <input type="password" id="oldPassword" placeholder="Masukkan password lama">
 
-      <label for="newPassword">Password Baru</label>
-      <input type="password" id="newPassword" name="newPassword" required>
+    <label for="newPassword">Password Baru</label>
+    <input type="password" id="newPassword" placeholder="Masukkan password baru">
 
-      <button onclick="change()">Ganti Password</button>
-    </form>
-    <div class="note">Pastikan password baru berbeda dengan sebelumnya.</div>
+    <button onclick="change()">Ubah Password</button>
+    <div id="status"></div>
   </div>
 
-</body>
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbzjk5uPK_KWqmyQUlMlo3G2P0TXEgvTlLjgy_Tb2q7ec5tWRAAHDwxNzjDMT0s_mz4D/exec";
 
-<script>
-	const scriptURL = "https://script.google.com/macros/s/AKfycbzjk5uPK_KWqmyQUlMlo3G2P0TXEgvTlLjgy_Tb2q7ec5tWRAAHDwxNzjDMT0s_mz4D/exec";
+    // cek login
+    window.addEventListener("DOMContentLoaded", () => {
+      const savedUsername = localStorage.getItem("username");
+      const savedRedirect = localStorage.getItem("redirect");
+      if (!savedUsername || !savedRedirect) {
+        window.location.href = "login.html";
+      }
+    });
 
-  // Cek apakah user sudah login sebelumnya
-  window.addEventListener("DOMContentLoaded", () => {
-    const savedUsername = localStorage.getItem("username");
-    const savedRedirect = localStorage.getItem("redirect");
-    if (savedUsername && savedRedirect) {
-      // langsung masuk tanpa login
-      //
-    }else {
-	window.location.href = 'login.html';
-	}
-  });
+    function change() {
+      const username = localStorage.getItem("username");
+      const oldPassword = document.getElementById("oldPassword").value.trim();
+      const newPassword = document.getElementById("newPassword").value.trim();
 
-  function change() {
-    const username = localStorage.getItem("username");
-    const oldPassword = document.getElementById("oldPassword").value.trim();
-	const newPassword = document.getElementById("newPassword").value.trim();
+      if (!oldPassword || !newPassword) {
+        document.getElementById("status").textContent = "Semua wajib diisi.";
+        return;
+      }
 
-    if (!oldPassword || !newPassword) {
-      document.getElementById("status").textContent = "Semua wajib diisi.";
-      return;
+      document.getElementById("status").textContent = "Memproses perubahan...";
+
+      fetch(`${scriptURL}?action=change&username=${encodeURIComponent(username)}&oldPassword=${encodeURIComponent(oldPassword)}&newPassword=${encodeURIComponent(newPassword)}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            localStorage.clear();
+            document.getElementById("status").textContent = "Berhasil! Silakan login kembali.";
+            setTimeout(() => {
+              window.location.href = "login.html";
+            }, 1500);
+          } else {
+            document.getElementById("status").textContent = data.message;
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          document.getElementById("status").textContent = "Gagal menghubungi server.";
+        });
     }
-
-    document.getElementById("status").textContent = "Memproses perubahan...";
-
-    fetch(`${scriptURL}?action=change&username=${encodeURIComponent(username)}&oldPassword=${encodeURIComponent(oldPassword)}&newPassword=${encodeURIComponent(newPassword)}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          window.location.href = 'login.html';
-        } else {
-          document.getElementById("status").textContent = data.message;
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        document.getElementById("status").textContent = "Gagal menghubungi server.";
-      });
-  }
-</script>
+  </script>
+</body>
 </html>
