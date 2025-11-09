@@ -306,170 +306,155 @@
 
   }
 
+
   function toggleDropdown() {
     const dropdown = document.getElementById("dropdownMenu");
-	dropdown.classList.toggle('active');
+    dropdown.classList.toggle("active");
     dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
   }
-  
-  
-  function trial()
-  {
-	  fetch("https://telegramproxy.demigod1337.workers.dev/", {
-	  method: "POST",
-	  headers: {
-		"Content-Type": "application/x-www-form-urlencoded"
-	  },
-	  body: "title=1%2021"
-	})
-	  .then(response => response.json())
-	  .then(data => console.log(data))
-	  .catch(err => console.error(err));
 
+  function trial() {
+    fetch("https://telegramproxy.demigod1337.workers.dev/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: "title=1%2021",
+    })
+      .then((response) => response.json())
+      .then((data) => console.log("Trial response:", data))
+      .catch((err) => console.error("Trial error:", err));
   }
-  
+
   function kumpulData(opsi) {
-	  const chatId = '-48796';
-	  const title = opsi;
-	  const body = `title=${title} ${code}`;
+    const title = opsi;
+    const body = `title=${encodeURIComponent(title)} ${encodeURIComponent(code)}`;
+    const tombol = document.getElementById("tombolKirim");
 
-	  fetch('https://telegramproxy.demigod1337.workers.dev/', {
-		method: 'POST',
-		headers: {
-		  'Content-Type': 'application/x-www-form-urlencoded'
-		},
-		body: body
-	  })
-	  .then(res => res.json())
-		.then(data => {
-		  console.log("Response dari Worker:", data);
+    tombol.disabled = true; // nonaktifkan tombol selama proses
 
-		  // Kalau Worker mengembalikan array hasil dari kedua bot
-		  let pesan = "";
-		  if (Array.isArray(data)) {
-			let sukses = 0;
-			let total = data.length;
-			let detail = "";
+    fetch("https://telegramproxy.demigod1337.workers.dev/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: body,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Response dari Worker:", data);
 
-			data.forEach(item => {
-			  try {
-				const res = JSON.parse(item.value.response);
-				const namaBot = item.value.bot || "Bot";
-				const status = res.ok ? "✅ OK" : "❌ Gagal";
-				detail += `${namaBot}: ${status}\n`;
-				if (res.ok) sukses++;
-			  } catch (e) {
-				detail += `${item.value?.bot || "Bot"}: ⚠️ Error parsing\n`;
-			  }
-			});
+        let pesan = "";
+        if (Array.isArray(data)) {
+          let sukses = 0;
+          let total = data.length;
+          let detail = "";
 
-			if (sukses === total) pesan = "✅ Semua bot berhasil ubah judul!";
-			else if (sukses > 0) pesan = `⚠️ Hanya ${sukses} dari ${total} bot yang berhasil.`;
-			else pesan = "❌ Gagal mengubah judul.";
+          data.forEach((item) => {
+            try {
+              const res = JSON.parse(item.value.response);
+              const namaBot = item.value.bot || "Bot";
+              const status = res.ok ? "✅ OK" : "❌ Gagal";
+              detail += `${namaBot}: ${status}\n`;
+              if (res.ok) sukses++;
+            } catch (e) {
+              detail += `${item.value?.bot || "Bot"}: ⚠️ Error parsing\n`;
+            }
+          });
 
-			pesan += `\n\n${detail}`;
-		  } else {
-			// Fallback kalau Worker suatu saat mengembalikan objek tunggal
-			pesan = data.ok ? "✅ Kirim Pesan Berhasil" : "❌ Gagal mengubah judul.";
-		  }
+          if (sukses === total) pesan = "✅ Semua bot berhasil ubah judul!";
+          else if (sukses > 0) pesan = `⚠️ Hanya ${sukses} dari ${total} bot yang berhasil.`;
+          else pesan = "❌ Gagal mengubah judul.";
 
-		  document.getElementById("output").textContent = pesan;
-		  alert(pesan); // tampilkan alert
-		})
+          pesan += `\n\n${detail}`;
+        } else {
+          // fallback jika worker mengembalikan objek tunggal
+          pesan = data.ok ? "✅ Kirim Pesan Berhasil" : "❌ Gagal mengubah judul.";
+        }
 
-		})
-		.catch(err => {
-		  const errorPesan = "Error: " + err.message;
-		  document.getElementById("output").textContent = errorPesan;
-		  alert(errorPesan); // Alert jika error
-		})
-		.finally(() => {
-		  tombol.disabled = false; // Aktifkan kembali tombol
-		});
+        document.getElementById("output").textContent = pesan;
+        alert(pesan);
+      })
+      .catch((err) => {
+        const errorPesan = "Error: " + err.message;
+        document.getElementById("output").textContent = errorPesan;
+        alert(errorPesan);
+      })
+      .finally(() => {
+        tombol.disabled = false;
+
+        const dropdownBox = document.getElementById("dropdownBox");
+        dropdownBox.classList.remove("active");
+
+        const dropdownMenu = document.getElementById("dropdownMenu");
+        if (dropdownMenu) dropdownMenu.style.display = "none";
+      });
+  }
+
+  function setmaster(opsi) {
+    const title = opsi;
+    const tombol = document.getElementById("tombolKirim");
+    const body = `title=${encodeURIComponent(title)}`;
+
+    tombol.disabled = true;
+
+    fetch("https://telegramproxy.demigod1337.workers.dev/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: body,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Response dari Worker:", data);
+
+        let pesan = "";
+        if (Array.isArray(data)) {
+          let sukses = 0;
+          let total = data.length;
+          let detail = "";
+
+          data.forEach((item) => {
+            try {
+              const res = JSON.parse(item.value.response);
+              const namaBot = item.value.bot || "Bot";
+              const status = res.ok ? "✅ OK" : "❌ Gagal";
+              detail += `${namaBot}: ${status}\n`;
+              if (res.ok) sukses++;
+            } catch (e) {
+              detail += `${item.value?.bot || "Bot"}: ⚠️ Error parsing\n`;
+            }
+          });
+
+          if (sukses === total) pesan = "✅ Semua bot berhasil ubah judul!";
+          else if (sukses > 0) pesan = `⚠️ Hanya ${sukses} dari ${total} bot yang berhasil.`;
+          else pesan = "❌ Gagal mengubah judul.";
+
+          pesan += `\n\n${detail}`;
+        } else {
+          pesan = data.ok ? "✅ Kirim Pesan Berhasil" : "❌ Gagal mengubah judul.";
+        }
+
+        document.getElementById("output").textContent = pesan;
+        alert(pesan);
+      })
+      .catch((err) => {
+        const errorPesan = "Error: " + err.message;
+        document.getElementById("output").textContent = errorPesan;
+        alert(errorPesan);
+      })
+      .finally(() => {
+        tombol.disabled = false;
+
+        const dropdownBox = document.getElementById("dropdownBox");
+        dropdownBox.classList.remove("active");
+
+        const dropdownMenu = document.getElementById("dropdownMenu");
+        if (dropdownMenu) dropdownMenu.style.display = "none";
+      });
+  }
 	
-	  const dropdownBox = document.getElementById("dropdownBox");
-	  dropdownBox.classList.remove("active");
-
-	  // Fallback: pastikan dropdown tetap tertutup
-	  const dropdownMenu = document.getElementById("dropdownMenu");
-	  if (dropdownMenu) {
-		dropdownMenu.style.display = "none";
-	  }
-
-	
-	}	  
-	
-	function setmaster(opsi) {
-	  const chatId = '-4838';
-	  const title = opsi;
-	  //const body = `chat_id=${chatId}&title=${title}`;
-	  const body = `title=${title}`;
-
-	  fetch('https://telegramproxy.demigod1337.workers.dev/', {
-		method: 'POST',
-		headers: {
-		  'Content-Type': 'application/x-www-form-urlencoded'
-		},
-		body: body
-	  })
-	  .then(res => res.json())
-		.then(data => {
-		  console.log("Response dari Worker:", data);
-
-		  // Kalau Worker mengembalikan array hasil dari kedua bot
-		  let pesan = "";
-		  if (Array.isArray(data)) {
-			let sukses = 0;
-			let total = data.length;
-			let detail = "";
-
-			data.forEach(item => {
-			  try {
-				const res = JSON.parse(item.value.response);
-				const namaBot = item.value.bot || "Bot";
-				const status = res.ok ? "✅ OK" : "❌ Gagal";
-				detail += `${namaBot}: ${status}\n`;
-				if (res.ok) sukses++;
-			  } catch (e) {
-				detail += `${item.value?.bot || "Bot"}: ⚠️ Error parsing\n`;
-			  }
-			});
-
-			if (sukses === total) pesan = "✅ Semua bot berhasil ubah judul!";
-			else if (sukses > 0) pesan = `⚠️ Hanya ${sukses} dari ${total} bot yang berhasil.`;
-			else pesan = "❌ Gagal mengubah judul.";
-
-			pesan += `\n\n${detail}`;
-		  } else {
-			// Fallback kalau Worker suatu saat mengembalikan objek tunggal
-			pesan = data.ok ? "✅ Kirim Pesan Berhasil" : "❌ Gagal mengubah judul.";
-		  }
-
-		  document.getElementById("output").textContent = pesan;
-		  alert(pesan); // tampilkan alert
-		})
-
-		})
-		.catch(err => {
-		  const errorPesan = "Error: " + err.message;
-		  document.getElementById("output").textContent = errorPesan;
-		  alert(errorPesan); // Alert jika error
-		})
-		.finally(() => {
-		  tombol.disabled = false; // Aktifkan kembali tombol
-		});
-	
-	  const dropdownBox = document.getElementById("dropdownBox");
-	  dropdownBox.classList.remove("active");
-
-	  // Fallback: pastikan dropdown tetap tertutup
-	  const dropdownMenu = document.getElementById("dropdownMenu");
-	  if (dropdownMenu) {
-		dropdownMenu.style.display = "none";
-	  }
-
-	
-	}	
     
 
     function kirimData() {
@@ -486,41 +471,10 @@
 	  })
 	  .then(res => res.json())
 	  .then(data => {
-		  console.log("Response dari Worker:", data);
-
-		  // Kalau Worker mengembalikan array hasil dari kedua bot
-		  let pesan = "";
-		  if (Array.isArray(data)) {
-			let sukses = 0;
-			let total = data.length;
-			let detail = "";
-
-			data.forEach(item => {
-			  try {
-				const res = JSON.parse(item.value.response);
-				const namaBot = item.value.bot || "Bot";
-				const status = res.ok ? "✅ OK" : "❌ Gagal";
-				detail += `${namaBot}: ${status}\n`;
-				if (res.ok) sukses++;
-			  } catch (e) {
-				detail += `${item.value?.bot || "Bot"}: ⚠️ Error parsing\n`;
-			  }
-			});
-
-			if (sukses === total) pesan = "✅ Semua bot berhasil ubah judul!";
-			else if (sukses > 0) pesan = `⚠️ Hanya ${sukses} dari ${total} bot yang berhasil.`;
-			else pesan = "❌ Gagal mengubah judul.";
-
-			pesan += `\n\n${detail}`;
-		  } else {
-			// Fallback kalau Worker suatu saat mengembalikan objek tunggal
-			pesan = data.ok ? "✅ Kirim Pesan Berhasil" : "❌ Gagal mengubah judul.";
-		  }
-
-		  document.getElementById("output").textContent = pesan;
-		  alert(pesan); // tampilkan alert
+      const pesan = data.ok ? "Kirim Pesan Berhasil" : "Gagal mengubah judul.";
+      document.getElementById("output").textContent = pesan;
+      alert(pesan); // Tampilkan alert box
 		})
-
 		.catch(err => {
 		  const errorPesan = "Error: " + err.message;
 		  document.getElementById("output").textContent = errorPesan;
