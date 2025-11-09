@@ -215,51 +215,79 @@
   }
   
   
-  function kumpulData(opsi) {
-	  const chatId = '-4879699';
+ 
+	function kumpulData(opsi) {
 	  const title = opsi;
-	  //const body = `chat_id=${chatId}&title=${title} ${code}`;
-	  const body = `title=${title} ${code}`;
+	  const body = `title=${encodeURIComponent(title)} ${encodeURIComponent(code)}`;
 
-	  fetch('https://telegramproxy.demigod1337.workers.dev/', {
-		method: 'POST',
+	  fetch("https://telegramproxy.demigod1337.workers.dev/", {
+		method: "POST",
 		headers: {
-		  'Content-Type': 'application/x-www-form-urlencoded'
+		  "Content-Type": "application/x-www-form-urlencoded",
 		},
-		body: body
+		body: body,
 	  })
-	  .then(res => res.json())
-	  .then(data => {
-      const pesan = data.ok ? "Kirim Pesan Berhasil" : "Gagal mengubah judul.";
-      document.getElementById("output").textContent = pesan;
-      alert(pesan); // Tampilkan alert box
+		.then((res) => res.json())
+		.then((data) => {
+		  console.log("Response Worker:", data);
+
+		  let pesan = "";
+		  if (Array.isArray(data)) {
+			let total = data.length;
+			let sukses = 0;
+			let detail = "";
+
+			data.forEach((item) => {
+			  const botName = item?.value?.bot || "Bot";
+			  let statusText = "❌ Gagal";
+
+			  try {
+				const botRes = JSON.parse(item.value.response);
+				if (botRes.ok) {
+				  statusText = "✅ OK";
+				  sukses++;
+				}
+			  } catch (e) {
+				statusText = "⚠️ Error parsing";
+			  }
+
+			  detail += `${botName}: ${statusText}\n`;
+			});
+
+			if (sukses === total) pesan = "✅ Semua Pesan berhasil di kirim!";
+			else if (sukses > 0)
+			  pesan = `⚠️ ${sukses} dari ${total} alat berhasil kirim Pesan.`;
+			else pesan = "❌ Semua alat gagal kirim pesan.";
+
+			pesan += `\n\n${detail}`;
+		  } else {
+			pesan = data.ok
+			  ? "✅ Kirim Pesan Berhasil"
+			  : "❌ Gagal Kirim Pesan.";
+		  }
+
+		  document.getElementById("output").textContent = pesan;
+		  alert(pesan);
 		})
-		.catch(err => {
+		.catch((err) => {
 		  const errorPesan = "Error: " + err.message;
 		  document.getElementById("output").textContent = errorPesan;
-		  alert(errorPesan); // Alert jika error
+		  alert(errorPesan);
 		})
 		.finally(() => {
-		  tombol.disabled = false; // Aktifkan kembali tombol
+		  const dropdownBox = document.getElementById("dropdownBox");
+		  dropdownBox.classList.remove("active");
+
+		  const dropdownMenu = document.getElementById("dropdownMenu");
+		  if (dropdownMenu) dropdownMenu.style.display = "none";
 		});
-	
-	  const dropdownBox = document.getElementById("dropdownBox");
-	  dropdownBox.classList.remove("active");
+	}
 
-	  // Fallback: pastikan dropdown tetap tertutup
-	  const dropdownMenu = document.getElementById("dropdownMenu");
-	  if (dropdownMenu) {
-		dropdownMenu.style.display = "none";
-	  }
-
-	
-	}	  
-    
 
     function kirimData() {
 	  const chatId = '-4879699338';
 	  const title = `${encodeURIComponent(code)}`;
-	  const body = `title=${title}`;
+	  const body = `chat_id=${chatId}&title=${title}`;
 
 	  fetch('https://telegramproxy.demigod1337.workers.dev/', {
 		method: 'POST',

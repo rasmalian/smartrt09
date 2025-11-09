@@ -366,16 +366,16 @@
 			  detail += `${botName}: ${statusText}\n`;
 			});
 
-			if (sukses === total) pesan = "✅ Semua bot berhasil ubah judul!";
+			if (sukses === total) pesan = "✅ Semua Pesan berhasil di kirim!";
 			else if (sukses > 0)
-			  pesan = `⚠️ ${sukses} dari ${total} bot berhasil ubah judul.`;
-			else pesan = "❌ Semua bot gagal ubah judul.";
+			  pesan = `⚠️ ${sukses} dari ${total} alat berhasil kirim Pesan.`;
+			else pesan = "❌ Semua alat gagal kirim pesan.";
 
 			pesan += `\n\n${detail}`;
 		  } else {
 			pesan = data.ok
 			  ? "✅ Kirim Pesan Berhasil"
-			  : "❌ Gagal mengubah judul.";
+			  : "❌ Gagal Kirim Pesan.";
 		  }
 
 		  document.getElementById("output").textContent = pesan;
@@ -433,16 +433,16 @@
 			  detail += `${botName}: ${statusText}\n`;
 			});
 
-			if (sukses === total) pesan = "✅ Semua bot berhasil ubah judul!";
+			if (sukses === total) pesan = "✅ Semua Pesan berhasil di kirim!";
 			else if (sukses > 0)
 			  pesan = `⚠️ ${sukses} dari ${total} bot berhasil ubah judul.`;
-			else pesan = "❌ Semua bot gagal ubah judul.";
+			else pesan = "❌ Semua alat gagal Kirim Pesan.";
 
 			pesan += `\n\n${detail}`;
 		  } else {
 			pesan = data.ok
 			  ? "✅ Kirim Pesan Berhasil"
-			  : "❌ Gagal mengubah judul.";
+			  : "❌ Gagal Kirim Pesan.";
 		  }
 
 		  document.getElementById("output").textContent = pesan;
