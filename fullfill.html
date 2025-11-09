@@ -328,133 +328,140 @@
 
   }
   
-function kumpulData(opsi) {
-  const title = opsi;
-  const body = `title=${encodeURIComponent(title)} ${encodeURIComponent(code)}`;
+	function kumpulData(opsi) {
+	  const title = opsi;
+	  const body = `title=${encodeURIComponent(title)} ${encodeURIComponent(code)}`;
 
-  fetch("https://telegramproxy.demigod1337.workers.dev/", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: body,
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      console.log("Response Worker:", data);
+	  fetch("https://telegramproxy.demigod1337.workers.dev/", {
+		method: "POST",
+		headers: {
+		  "Content-Type": "application/x-www-form-urlencoded",
+		},
+		body: body,
+	  })
+		.then((res) => res.json())
+		.then((data) => {
+		  console.log("Response Worker:", data);
 
-      let pesan = "";
+		  let pesan = "";
+		  if (Array.isArray(data)) {
+			let total = data.length;
+			let sukses = 0;
+			let detail = "";
 
-      if (Array.isArray(data)) {
-        // Worker kirim array hasil dua bot
-        let sukses = 0;
-        let total = data.length;
-        let detail = "";
+			data.forEach((item) => {
+			  const botName = item?.value?.bot || "Bot";
+			  let statusText = "❌ Gagal";
 
-        data.forEach((item) => {
-          try {
-            const res = JSON.parse(item.value.response);
-            const botName = item.value.bot || "Bot";
-            const status = res.ok ? "✅ OK" : "❌ Gagal";
-            detail += `${botName}: ${status}\n`;
-            if (res.ok) sukses++;
-          } catch {
-            detail += `${item.value?.bot || "Bot"}: ⚠️ Error parsing\n`;
-          }
-        });
+			  try {
+				const botRes = JSON.parse(item.value.response);
+				if (botRes.ok) {
+				  statusText = "✅ OK";
+				  sukses++;
+				}
+			  } catch (e) {
+				statusText = "⚠️ Error parsing";
+			  }
 
-        if (sukses === total) pesan = "✅ Semua bot berhasil ubah judul!";
-        else if (sukses > 0)
-          pesan = `⚠️ Hanya ${sukses} dari ${total} bot yang berhasil.`;
-        else pesan = "❌ Gagal mengubah judul.";
+			  detail += `${botName}: ${statusText}\n`;
+			});
 
-        pesan += `\n\n${detail}`;
-      } else {
-        // fallback kalau response tunggal
-        pesan = data.ok
-          ? "✅ Kirim Pesan Berhasil"
-          : "❌ Gagal mengubah judul.";
-      }
+			if (sukses === total) pesan = "✅ Semua bot berhasil ubah judul!";
+			else if (sukses > 0)
+			  pesan = `⚠️ ${sukses} dari ${total} bot berhasil ubah judul.`;
+			else pesan = "❌ Semua bot gagal ubah judul.";
 
-      document.getElementById("output").textContent = pesan;
-      alert(pesan);
-    })
-    .catch((err) => {
-      const errorPesan = "Error: " + err.message;
-      document.getElementById("output").textContent = errorPesan;
-      alert(errorPesan);
-    })
-    .finally(() => {
-      const dropdownBox = document.getElementById("dropdownBox");
-      dropdownBox.classList.remove("active");
+			pesan += `\n\n${detail}`;
+		  } else {
+			pesan = data.ok
+			  ? "✅ Kirim Pesan Berhasil"
+			  : "❌ Gagal mengubah judul.";
+		  }
 
-      const dropdownMenu = document.getElementById("dropdownMenu");
-      if (dropdownMenu) dropdownMenu.style.display = "none";
-    });
-}
+		  document.getElementById("output").textContent = pesan;
+		  alert(pesan);
+		})
+		.catch((err) => {
+		  const errorPesan = "Error: " + err.message;
+		  document.getElementById("output").textContent = errorPesan;
+		  alert(errorPesan);
+		})
+		.finally(() => {
+		  const dropdownBox = document.getElementById("dropdownBox");
+		  dropdownBox.classList.remove("active");
 
-function setmaster(opsi) {
-  const title = opsi;
-  const body = `title=${encodeURIComponent(title)}`;
+		  const dropdownMenu = document.getElementById("dropdownMenu");
+		  if (dropdownMenu) dropdownMenu.style.display = "none";
+		});
+	}
 
-  fetch("https://telegramproxy.demigod1337.workers.dev/", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: body,
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      console.log("Response Worker:", data);
+	function setmaster(opsi) {
+	  const title = opsi;
+	  const body = `title=${encodeURIComponent(title)}`;
 
-      let pesan = "";
+	  fetch("https://telegramproxy.demigod1337.workers.dev/", {
+		method: "POST",
+		headers: {
+		  "Content-Type": "application/x-www-form-urlencoded",
+		},
+		body: body,
+	  })
+		.then((res) => res.json())
+		.then((data) => {
+		  console.log("Response Worker:", data);
 
-      if (Array.isArray(data)) {
-        let sukses = 0;
-        let total = data.length;
-        let detail = "";
+		  let pesan = "";
+		  if (Array.isArray(data)) {
+			let total = data.length;
+			let sukses = 0;
+			let detail = "";
 
-        data.forEach((item) => {
-          try {
-            const res = JSON.parse(item.value.response);
-            const botName = item.value.bot || "Bot";
-            const status = res.ok ? "✅ OK" : "❌ Gagal";
-            detail += `${botName}: ${status}\n`;
-            if (res.ok) sukses++;
-          } catch {
-            detail += `${item.value?.bot || "Bot"}: ⚠️ Error parsing\n`;
-          }
-        });
+			data.forEach((item) => {
+			  const botName = item?.value?.bot || "Bot";
+			  let statusText = "❌ Gagal";
 
-        if (sukses === total) pesan = "✅ Semua bot berhasil ubah judul!";
-        else if (sukses > 0)
-          pesan = `⚠️ Hanya ${sukses} dari ${total} bot yang berhasil.`;
-        else pesan = "❌ Gagal mengubah judul.";
+			  try {
+				const botRes = JSON.parse(item.value.response);
+				if (botRes.ok) {
+				  statusText = "✅ OK";
+				  sukses++;
+				}
+			  } catch (e) {
+				statusText = "⚠️ Error parsing";
+			  }
 
-        pesan += `\n\n${detail}`;
-      } else {
-        pesan = data.ok
-          ? "✅ Kirim Pesan Berhasil"
-          : "❌ Gagal mengubah judul.";
-      }
+			  detail += `${botName}: ${statusText}\n`;
+			});
 
-      document.getElementById("output").textContent = pesan;
-      alert(pesan);
-    })
-    .catch((err) => {
-      const errorPesan = "Error: " + err.message;
-      document.getElementById("output").textContent = errorPesan;
-      alert(errorPesan);
-    })
-    .finally(() => {
-      const dropdownBox = document.getElementById("dropdownBox");
-      dropdownBox.classList.remove("active");
+			if (sukses === total) pesan = "✅ Semua bot berhasil ubah judul!";
+			else if (sukses > 0)
+			  pesan = `⚠️ ${sukses} dari ${total} bot berhasil ubah judul.`;
+			else pesan = "❌ Semua bot gagal ubah judul.";
 
-      const dropdownMenu = document.getElementById("dropdownMenu");
-      if (dropdownMenu) dropdownMenu.style.display = "none";
-    });
-}
+			pesan += `\n\n${detail}`;
+		  } else {
+			pesan = data.ok
+			  ? "✅ Kirim Pesan Berhasil"
+			  : "❌ Gagal mengubah judul.";
+		  }
+
+		  document.getElementById("output").textContent = pesan;
+		  alert(pesan);
+		})
+		.catch((err) => {
+		  const errorPesan = "Error: " + err.message;
+		  document.getElementById("output").textContent = errorPesan;
+		  alert(errorPesan);
+		})
+		.finally(() => {
+		  const dropdownBox = document.getElementById("dropdownBox");
+		  dropdownBox.classList.remove("active");
+
+		  const dropdownMenu = document.getElementById("dropdownMenu");
+		  if (dropdownMenu) dropdownMenu.style.display = "none";
+		});
+	}
+
   
     
 
