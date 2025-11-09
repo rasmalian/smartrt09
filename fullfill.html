@@ -341,10 +341,42 @@
 		body: body
 	  })
 	  .then(res => res.json())
-	  .then(data => {
-      const pesan = data.ok ? "Kirim Pesan Berhasil" : "Gagal mengubah judul.";
-      document.getElementById("output").textContent = pesan;
-      alert(pesan); // Tampilkan alert box
+		.then(data => {
+		  console.log("Response dari Worker:", data);
+
+		  // Kalau Worker mengembalikan array hasil dari kedua bot
+		  let pesan = "";
+		  if (Array.isArray(data)) {
+			let sukses = 0;
+			let total = data.length;
+			let detail = "";
+
+			data.forEach(item => {
+			  try {
+				const res = JSON.parse(item.value.response);
+				const namaBot = item.value.bot || "Bot";
+				const status = res.ok ? "✅ OK" : "❌ Gagal";
+				detail += `${namaBot}: ${status}\n`;
+				if (res.ok) sukses++;
+			  } catch (e) {
+				detail += `${item.value?.bot || "Bot"}: ⚠️ Error parsing\n`;
+			  }
+			});
+
+			if (sukses === total) pesan = "✅ Semua bot berhasil ubah judul!";
+			else if (sukses > 0) pesan = `⚠️ Hanya ${sukses} dari ${total} bot yang berhasil.`;
+			else pesan = "❌ Gagal mengubah judul.";
+
+			pesan += `\n\n${detail}`;
+		  } else {
+			// Fallback kalau Worker suatu saat mengembalikan objek tunggal
+			pesan = data.ok ? "✅ Kirim Pesan Berhasil" : "❌ Gagal mengubah judul.";
+		  }
+
+		  document.getElementById("output").textContent = pesan;
+		  alert(pesan); // tampilkan alert
+		})
+
 		})
 		.catch(err => {
 		  const errorPesan = "Error: " + err.message;
@@ -381,10 +413,42 @@
 		body: body
 	  })
 	  .then(res => res.json())
-	  .then(data => {
-      const pesan = data.ok ? "Kirim Pesan Berhasil" : "Gagal mengubah judul.";
-      document.getElementById("output").textContent = pesan;
-      alert(pesan); // Tampilkan alert box
+		.then(data => {
+		  console.log("Response dari Worker:", data);
+
+		  // Kalau Worker mengembalikan array hasil dari kedua bot
+		  let pesan = "";
+		  if (Array.isArray(data)) {
+			let sukses = 0;
+			let total = data.length;
+			let detail = "";
+
+			data.forEach(item => {
+			  try {
+				const res = JSON.parse(item.value.response);
+				const namaBot = item.value.bot || "Bot";
+				const status = res.ok ? "✅ OK" : "❌ Gagal";
+				detail += `${namaBot}: ${status}\n`;
+				if (res.ok) sukses++;
+			  } catch (e) {
+				detail += `${item.value?.bot || "Bot"}: ⚠️ Error parsing\n`;
+			  }
+			});
+
+			if (sukses === total) pesan = "✅ Semua bot berhasil ubah judul!";
+			else if (sukses > 0) pesan = `⚠️ Hanya ${sukses} dari ${total} bot yang berhasil.`;
+			else pesan = "❌ Gagal mengubah judul.";
+
+			pesan += `\n\n${detail}`;
+		  } else {
+			// Fallback kalau Worker suatu saat mengembalikan objek tunggal
+			pesan = data.ok ? "✅ Kirim Pesan Berhasil" : "❌ Gagal mengubah judul.";
+		  }
+
+		  document.getElementById("output").textContent = pesan;
+		  alert(pesan); // tampilkan alert
+		})
+
 		})
 		.catch(err => {
 		  const errorPesan = "Error: " + err.message;
@@ -422,10 +486,41 @@
 	  })
 	  .then(res => res.json())
 	  .then(data => {
-      const pesan = data.ok ? "Kirim Pesan Berhasil" : "Gagal mengubah judul.";
-      document.getElementById("output").textContent = pesan;
-      alert(pesan); // Tampilkan alert box
+		  console.log("Response dari Worker:", data);
+
+		  // Kalau Worker mengembalikan array hasil dari kedua bot
+		  let pesan = "";
+		  if (Array.isArray(data)) {
+			let sukses = 0;
+			let total = data.length;
+			let detail = "";
+
+			data.forEach(item => {
+			  try {
+				const res = JSON.parse(item.value.response);
+				const namaBot = item.value.bot || "Bot";
+				const status = res.ok ? "✅ OK" : "❌ Gagal";
+				detail += `${namaBot}: ${status}\n`;
+				if (res.ok) sukses++;
+			  } catch (e) {
+				detail += `${item.value?.bot || "Bot"}: ⚠️ Error parsing\n`;
+			  }
+			});
+
+			if (sukses === total) pesan = "✅ Semua bot berhasil ubah judul!";
+			else if (sukses > 0) pesan = `⚠️ Hanya ${sukses} dari ${total} bot yang berhasil.`;
+			else pesan = "❌ Gagal mengubah judul.";
+
+			pesan += `\n\n${detail}`;
+		  } else {
+			// Fallback kalau Worker suatu saat mengembalikan objek tunggal
+			pesan = data.ok ? "✅ Kirim Pesan Berhasil" : "❌ Gagal mengubah judul.";
+		  }
+
+		  document.getElementById("output").textContent = pesan;
+		  alert(pesan); // tampilkan alert
 		})
+
 		.catch(err => {
 		  const errorPesan = "Error: " + err.message;
 		  document.getElementById("output").textContent = errorPesan;
